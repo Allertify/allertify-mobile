@@ -6,6 +6,9 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerTitleAlign: 'center',
+        headerTitleStyle: {
+          fontFamily: 'Satoshi-Bold',
+        },
         tabBarActiveTintColor: '#91bef8',
         tabBarLabelStyle: {
           fontFamily: 'Satoshi-Bold',
