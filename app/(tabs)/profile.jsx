@@ -1,6 +1,8 @@
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { ThemedLink } from '../../components/ThemedLink';
-import { ThemedText } from '../../components/ThemedText';
+import { ScrollView, StyleSheet, View } from 'react-native';
+
+import { ThemedButton } from '@/components/ThemedButton';
+import { ThemedLink } from '@/components/ThemedLink';
+import { ThemedText } from '@/components/ThemedText';
 
 const account = [
   {
@@ -44,20 +46,18 @@ export default function ProfileScreen() {
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
     >
-      <View style={styles.sectionContainer}>
+      <View style={{ marginBottom: 16 }}>
         {account.map((item, index) => (
           <ThemedLink key={index} {...item} />
         ))}
       </View>
-      <View style={styles.sectionContainer}>
-        <ThemedText style={styles.sectionTitle}>Settings</ThemedText>
+      <View style={{ marginBottom: 32 }}>
+        <ThemedText style={{ fontSize: 20 }}>Settings</ThemedText>
         {settings.map((item, index) => (
           <ThemedLink key={index} {...item} />
         ))}
       </View>
-      <Pressable style={styles.logoutButton}>
-        <ThemedText style={styles.logoutButtonText}>LOGOUT</ThemedText>
-      </Pressable>
+      <ThemedButton variant="destructive" label="LOGOUT" />
     </ScrollView>
   );
 }
@@ -70,22 +70,5 @@ const styles = StyleSheet.create({
   contentContainer: {
     padding: 24,
     paddingBottom: 32,
-  },
-  sectionContainer: {
-    marginBottom: 16,
-  },
-  sectionTitle: {
-    fontSize: 20,
-  },
-  logoutButton: {
-    backgroundColor: '#ff3b30',
-    borderRadius: 16,
-    marginTop: 16,
-    padding: 16,
-  },
-  logoutButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    textAlign: 'center',
   },
 });

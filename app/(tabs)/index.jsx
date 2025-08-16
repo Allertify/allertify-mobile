@@ -1,19 +1,28 @@
 import { StyleSheet, View } from 'react-native';
-import { ThemedText } from '../../components/ThemedText';
+
+import { ThemedLink } from '@/components/ThemedLink';
+import { ThemedText } from '@/components/ThemedText';
 
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
-      <ThemedText>Home</ThemedText>
+      <ThemedText style={styles.greeting}>👋 Hey, John Doe!</ThemedText>
+      <ThemedLink label="Recent Scans" href="/history" />
+      <ThemedLink label="Red Food List" href="/products" />
+      <ThemedLink label="Green Food List" href="/products" />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
     backgroundColor: '#fff',
     flex: 1,
-    justifyContent: 'center',
+    padding: 24,
+  },
+  greeting: {
+    fontSize: 20,
+    textAlign: 'center',
+    marginBottom: 32,
   },
 });
