@@ -1,9 +1,10 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { ThemedText } from '../../components/ThemedText';
 
 export default function ScanProductScreen() {
   return (
     <View style={styles.container}>
-      <Text>Scan Product</Text>
+      <ThemedText>Scan Product</ThemedText>
     </View>
   );
 }
