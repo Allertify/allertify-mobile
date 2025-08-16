@@ -9,6 +9,7 @@ export default function TabsLayout() {
         headerTitleStyle: {
           fontFamily: 'Satoshi-Bold',
         },
+        headerShadowVisible: false,
         tabBarActiveTintColor: '#91bef8',
         tabBarLabelStyle: {
           fontFamily: 'Satoshi-Bold',
