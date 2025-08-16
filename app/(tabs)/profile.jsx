@@ -1,9 +1,10 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { ThemedText } from '../../components/ThemedText';
 
 export default function ProfileScreen() {
   return (
     <View style={styles.container}>
-      <Text>Profile</Text>
+      <ThemedText>Profile</ThemedText>
     </View>
   );
 }

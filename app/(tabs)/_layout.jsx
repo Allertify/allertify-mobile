@@ -3,14 +3,33 @@ import { Tabs } from 'expo-router';
 
 export default function TabsLayout() {
   return (
-    <Tabs>
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: '#91bef8',
+        headerShown: false,
+        tabBarLabelStyle: {
+          fontFamily: 'Satoshi-Bold',
+        },
+        tabBarStyle: {
+          shadowColor: 'transparent',
+          shadowOffset: {
+            width: 0,
+            height: 0,
+          },
+          shadowOpacity: 0,
+          shadowRadius: 0,
+          elevation: 0,
+          borderTopWidth: 0,
+        },
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: 'Allertify',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
-              name={focused ? 'home-sharp' : 'home-outline'}
+              name={focused ? 'home' : 'home-outline'}
               color={color}
               size={24}
             />
@@ -20,7 +39,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="scan"
         options={{
-          title: 'Scan Product',
+          title: 'Scan',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? 'barcode' : 'barcode-outline'}
