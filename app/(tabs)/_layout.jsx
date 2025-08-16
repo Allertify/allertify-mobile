@@ -5,28 +5,17 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
+        headerTitleAlign: 'center',
         tabBarActiveTintColor: '#91bef8',
-        headerShown: false,
         tabBarLabelStyle: {
           fontFamily: 'Satoshi-Bold',
-        },
-        tabBarStyle: {
-          shadowColor: 'transparent',
-          shadowOffset: {
-            width: 0,
-            height: 0,
-          },
-          shadowOpacity: 0,
-          shadowRadius: 0,
-          elevation: 0,
-          borderTopWidth: 0,
         },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Allertify',
+          title: 'Home',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? 'home' : 'home-outline'}
