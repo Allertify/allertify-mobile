@@ -14,6 +14,6 @@ export function HorizontalList({ itemCount = 5 }) {
 const styles = StyleSheet.create({
   horizontalList: {
     paddingVertical: 12,
-    gap: 8,
-  },
+    gap: 8
+  }
 });

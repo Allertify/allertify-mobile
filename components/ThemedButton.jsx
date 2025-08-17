@@ -13,14 +13,14 @@ const styles = StyleSheet.create({
   default: {
     backgroundColor: "#91bef8",
     borderRadius: 16,
-    padding: 16,
+    padding: 16
   },
   destructive: {
-    backgroundColor: "#ff3b30",
+    backgroundColor: "#ff3b30"
   },
   label: {
     color: "#fff",
     fontSize: 16,
-    textAlign: "center",
-  },
+    textAlign: "center"
+  }
 });

@@ -8,36 +8,36 @@ const account = [
   {
     href: "/profile/full-name",
     label: "Full Name",
-    description: "Change your full name",
+    description: "Change your full name"
   },
   {
     href: "/profile/email",
     label: "Email",
-    description: "Change your email",
+    description: "Change your email"
   },
   {
     href: "/profile/password",
     label: "Password",
-    description: "Change your password",
-  },
+    description: "Change your password"
+  }
 ];
 
 const settings = [
   {
     href: "/profile/allergens",
     label: "Allergens",
-    description: "Manage your allergens",
+    description: "Manage your allergens"
   },
   {
     href: "/profile/scan-history",
     label: "History",
-    description: "View your scan history",
+    description: "View your scan history"
   },
   {
     href: "/profile/emergency-contacts",
     label: "Emergency Contacts",
-    description: "Manage your emergency contacts",
-  },
+    description: "Manage your emergency contacts"
+  }
 ];
 
 export default function ProfileScreen() {
@@ -64,10 +64,10 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
-    flex: 1,
+    flex: 1
   },
   contentContainer: {
     padding: 24,
-    paddingBottom: 32,
-  },
+    paddingBottom: 32
+  }
 });

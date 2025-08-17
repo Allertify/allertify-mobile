@@ -17,9 +17,7 @@ export function BarcodeScanner({ style, containerStyle }) {
   if (!permission.granted) {
     return (
       <View style={[styles.container, containerStyle]}>
-        <ThemedText style={{ marginBottom: 16 }}>
-          We need your permission to show the camera
-        </ThemedText>
+        <ThemedText style={{ marginBottom: 16 }}>We need your permission to show the camera</ThemedText>
         <ThemedButton onPress={requestPermission} label="GRANT PERMISSION" />
       </View>
     );
@@ -37,8 +35,8 @@ export function BarcodeScanner({ style, containerStyle }) {
       { text: "OK", onPress: () => setScanned(false) },
       {
         text: "Scan Again",
-        onPress: () => setScanned(false),
-      },
+        onPress: () => setScanned(false)
+      }
     ]);
   };
 
@@ -49,7 +47,7 @@ export function BarcodeScanner({ style, containerStyle }) {
         facing={facing}
         onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
         barcodeScannerSettings={{
-          barcodeTypes: ["ean13", "ean8", "upc_a", "upc_e", "code39", "code128", "qr"],
+          barcodeTypes: ["ean13", "ean8", "upc_a", "upc_e", "code39", "code128", "qr"]
         }}
       />
       <View style={styles.overlay}>
@@ -64,12 +62,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     padding: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center"
   },
   camera: {
     flex: 1,
-    borderRadius: 16,
+    borderRadius: 16
   },
   overlay: {
     position: "absolute",
@@ -78,6 +76,6 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     justifyContent: "flex-end",
-    padding: 40,
-  },
+    padding: 40
+  }
 });

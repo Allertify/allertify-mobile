@@ -23,17 +23,17 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#e0e0e0",
     flexDirection: "row",
-    paddingVertical: 16,
+    paddingVertical: 16
   },
   textContainer: {
     flex: 1,
-    flexDirection: "column",
+    flexDirection: "column"
   },
   label: {
-    fontSize: 16,
+    fontSize: 16
   },
   description: {
     color: "#666",
-    fontSize: 14,
-  },
+    fontSize: 14
+  }
 });
