@@ -9,7 +9,13 @@ export default function EmailScreen() {
 
   return (
     <View style={styles.container}>
-      <ThemedInput value={email} onChangeText={onChangeEmail} placeholder="m@example.com" autoComplete="email" />
+      <ThemedInput
+        value={email}
+        onChangeText={onChangeEmail}
+        placeholder="m@example.com"
+        autoComplete="email"
+        keyboardType="email-address"
+      />
       <ThemedButton label="Save" />
     </View>
   );
