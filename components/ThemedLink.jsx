@@ -3,9 +3,9 @@ import { Link } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { ThemedText } from './ThemedText';
 
-export function ThemedLink({ href, label, description }) {
+export function ThemedLink({ href, label, description, ...props }) {
   return (
-    <Link href={href}>
+    <Link href={href} {...props}>
       <View style={styles.container}>
         <View style={styles.textContainer}>
           <ThemedText style={styles.label}>{label}</ThemedText>

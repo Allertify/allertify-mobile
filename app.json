@@ -28,8 +28,7 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font",
-      "expo-barcode-scanner"
+      "expo-font"
     ]
   }
 }

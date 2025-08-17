@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet } from 'react-native';
 import { ThemedText } from './ThemedText';
 
-export function ThemedButton({ style, variant = 'default', label, ...rest }) {
+export function ThemedButton({ style, variant = 'default', label, ...props }) {
   return (
     <Pressable
       style={[
@@ -9,7 +9,7 @@ export function ThemedButton({ style, variant = 'default', label, ...rest }) {
         variant === 'destructive' ? styles.destructive : undefined,
         style,
       ]}
-      {...rest}
+      {...props}
     >
       <ThemedText style={styles.label}>{label}</ThemedText>
     </Pressable>
