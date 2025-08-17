@@ -1,9 +1,8 @@
 import { Image, Pressable, StyleSheet, View } from "react-native";
-
-import { ThemedText } from "@/components/ui/ThemedText";
-import Burger from "../../assets/burger.png";
-import Waves from "../../assets/waves_bg.svg";
 import { useRouter } from "expo-router";
+import { ThemedText } from "@/components/ui/ThemedText";
+import Burger from "@/assets/burger.png";
+import Waves from "@/assets/waves_bg.svg";
 
 export default function AuthScreen() {
   const router = useRouter();
@@ -20,14 +19,21 @@ export default function AuthScreen() {
       <Image source={Burger} style={styles.burger} />
 
       <View style={styles.buttons_area}>
-        <Pressable style={styles.signup_button} onPress={() => {}}>
+        <Pressable
+          style={styles.signup_button}
+          onPress={() => {
+            router.push("/signup");
+          }}
+        >
           <ThemedText style={styles.signup_button_text}>Sign Up</ThemedText>
         </Pressable>
+
         <View style={styles.or_container}>
           <View style={styles.line} />
           <ThemedText style={styles.or_text}>or</ThemedText>
           <View style={styles.line} />
         </View>
+
         <Pressable
           style={styles.login_button}
           onPress={() => {
@@ -56,7 +62,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     color: "#6327B7",
     textAlign: "center",
-    marginBottom: 0,
+    marginBottom: 0
   },
 
   subtitle: {
