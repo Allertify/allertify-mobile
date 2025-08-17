@@ -23,6 +23,17 @@ export default function RootLayout() {
     <SafeAreaView style={{ flex: 1 }}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="products"
+          options={{
+            headerTitle: 'My Products',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Satoshi-Bold',
+            },
+            headerShadowVisible: false,
+          }}
+        />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />

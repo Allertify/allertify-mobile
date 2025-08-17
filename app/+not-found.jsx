@@ -10,6 +10,9 @@ export default function NotFoundScreen() {
         options={{
           title: 'Oops! Not Found',
           headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontFamily: 'Satoshi-Bold',
+          },
         }}
       />
       <View style={styles.container}>
