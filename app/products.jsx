@@ -1,7 +1,7 @@
 import { StyleSheet, View, ScrollView } from 'react-native';
 
-import { HorizontalList } from '@/components/HorizontalList';
-import { ThemedText } from '@/components/ThemedText';
+import { HorizontalList } from '@/components/lists/HorizontalList';
+import { ThemedText } from '@/components/ui/ThemedText';
 
 export default function ProductsScreen() {
   return (
@@ -11,8 +11,8 @@ export default function ProductsScreen() {
         <ThemedText style={styles.description}>
           Safe products that are generally well-tolerated
         </ThemedText>
-        <HorizontalList itemCount={6} />
-        <HorizontalList itemCount={6} />
+        <HorizontalList itemCount={6} type="product" listType="green" />
+        <HorizontalList itemCount={6} type="product" listType="green" />
       </View>
 
       <View style={styles.section}>
@@ -20,8 +20,8 @@ export default function ProductsScreen() {
         <ThemedText style={styles.description}>
           Products that may cause adverse reactions
         </ThemedText>
-        <HorizontalList itemCount={6} />
-        <HorizontalList itemCount={6} />
+        <HorizontalList itemCount={6} type="product" listType="red" />
+        <HorizontalList itemCount={6} type="product" listType="red" />
       </View>
 
       <View style={styles.bottomSpacing} />

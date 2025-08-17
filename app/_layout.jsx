@@ -45,6 +45,17 @@ export default function RootLayout() {
             headerShadowVisible: false,
           }}
         />
+        <Stack.Screen
+          name="product-details"
+          options={{
+            headerTitle: 'Product Details',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Satoshi-Bold',
+            },
+            headerShadowVisible: false,
+          }}
+        />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />

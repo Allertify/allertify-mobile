@@ -1,12 +1,11 @@
 import { StyleSheet, View, ScrollView } from 'react-native';
 
-import { VerticalList } from '@/components/VerticalList';
-import { ThemedText } from '@/components/ThemedText';
+import { VerticalList } from '@/components/lists/VerticalList';
+import { ThemedText } from '@/components/ui/ThemedText';
 
 export default function HistoryScreen() {
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <ThemedText style={styles.title}>📋 Scan History</ThemedText>
       <ThemedText style={styles.description}>
         Your recent barcode scans and product lookups
       </ThemedText>

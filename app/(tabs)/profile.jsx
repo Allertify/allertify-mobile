@@ -1,8 +1,8 @@
 import { ScrollView, StyleSheet, View } from 'react-native';
 
-import { ThemedButton } from '@/components/ThemedButton';
-import { ThemedLink } from '@/components/ThemedLink';
-import { ThemedText } from '@/components/ThemedText';
+import { ThemedButton } from '@/components/ui/ThemedButton';
+import { ThemedLink } from '@/components/ui/ThemedLink';
+import { ThemedText } from '@/components/ui/ThemedText';
 
 const account = [
   {
