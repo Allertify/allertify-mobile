@@ -34,6 +34,17 @@ export default function RootLayout() {
             headerShadowVisible: false,
           }}
         />
+        <Stack.Screen
+          name="history"
+          options={{
+            headerTitle: 'Scan History',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Satoshi-Bold',
+            },
+            headerShadowVisible: false,
+          }}
+        />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />
