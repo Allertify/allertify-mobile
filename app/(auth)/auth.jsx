@@ -1,13 +1,18 @@
-import { StyleSheet, View, Text, Image, Pressable } from "react-native";
-import Waves from "../../assets/waves_bg.svg";
+import { Image, Pressable, StyleSheet, View } from "react-native";
+
+import { ThemedText } from "@/components/ui/ThemedText";
 import Burger from "../../assets/burger.png";
+import Waves from "../../assets/waves_bg.svg";
+import { useRouter } from "expo-router";
 
 export default function AuthScreen() {
+  const router = useRouter();
+
   return (
     <View style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.title_container}>
-        <Text style={styles.title}>Allertify</Text>
-        <Text style={styles.subtitle}>Know what you're biting into.</Text>
+        <ThemedText style={styles.title}>Allertify</ThemedText>
+        <ThemedText style={styles.subtitle}>Know what you're biting into.</ThemedText>
       </View>
 
       <Waves style={styles.waves} width="100%" height={280} preserveAspectRatio="none" />
@@ -16,15 +21,20 @@ export default function AuthScreen() {
 
       <View style={styles.buttons_area}>
         <Pressable style={styles.signup_button} onPress={() => {}}>
-          <Text style={styles.signup_button_text}>Sign Up</Text>
+          <ThemedText style={styles.signup_button_text}>Sign Up</ThemedText>
         </Pressable>
         <View style={styles.or_container}>
           <View style={styles.line} />
-          <Text style={styles.or_text}>or</Text>
+          <ThemedText style={styles.or_text}>or</ThemedText>
           <View style={styles.line} />
         </View>
-        <Pressable style={styles.login_button} onPress={() => {}}>
-          <Text style={styles.login_button_text}>Login</Text>
+        <Pressable
+          style={styles.login_button}
+          onPress={() => {
+            router.push("/");
+          }}
+        >
+          <ThemedText style={styles.login_button_text}>Login</ThemedText>
         </Pressable>
       </View>
     </View>

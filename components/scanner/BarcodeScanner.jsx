@@ -2,13 +2,8 @@ import { CameraView, useCameraPermissions } from "expo-camera";
 import { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 
-<<<<<<< HEAD:components/scanner/BarcodeScanner.jsx
 import { ThemedButton } from '../ui/ThemedButton';
 import { ThemedText } from '../ui/ThemedText';
-=======
-import { ThemedButton } from "@/components/ThemedButton";
-import { ThemedText } from "@/components/ThemedText";
->>>>>>> eb96bf4 (Feat: Added prettier for consistent codebase):components/BarcodeScanner.jsx
 
 export function BarcodeScanner({ style, containerStyle }) {
   const [facing, setFacing] = useState("back");
