@@ -17,7 +17,9 @@ export function BarcodeScanner({ style, containerStyle }) {
   if (!permission.granted) {
     return (
       <View style={[styles.container, containerStyle]}>
-        <ThemedText>We need your permission to show the camera</ThemedText>
+        <ThemedText style={{ marginBottom: 16 }}>
+          We need your permission to show the camera
+        </ThemedText>
         <ThemedButton onPress={requestPermission} label="GRANT PERMISSION" />
       </View>
     );
@@ -74,6 +76,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     padding: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   camera: {
     flex: 1,
