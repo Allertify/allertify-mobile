@@ -67,10 +67,10 @@ const styles = StyleSheet.create({
 
   burger: {
     position: "absolute",
-    top: 170,
+    top: 160,
     alignSelf: "center",
-    width: 330,
-    height: 300,
+    width: 350,
+    height: 350,
     zIndex: 2,
     backgroundColor: "transparent"
   },
