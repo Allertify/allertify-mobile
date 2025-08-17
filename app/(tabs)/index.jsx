@@ -9,13 +9,13 @@ export default function HomeScreen() {
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <ThemedText style={styles.greeting}>👋 Hey, John Doe!</ThemedText>
 
-      <ThemedLink label="Recent Scans" href="/history" />
+      <ThemedLink label="Recent Scans" href="/profile/history" />
       <HorizontalList itemCount={9} />
 
-      <ThemedLink label="Red Food List" href="/products" />
+      <ThemedLink label="Red Food List" href="/profile/products" />
       <HorizontalList itemCount={9} />
 
-      <ThemedLink label="Green Food List" href="/products" />
+      <ThemedLink label="Green Food List" href="/profile/products" />
       <HorizontalList itemCount={9} />
 
       <ThemedLink label="Auth Test" href="/auth" />

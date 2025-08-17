@@ -24,37 +24,16 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="products"
-          options={{
-            headerTitle: 'My Products',
-            headerTitleAlign: 'center',
-            headerTitleStyle: {
-              fontFamily: 'Satoshi-Bold',
-            },
-            headerShadowVisible: false,
-          }}
-        />
-        <Stack.Screen
-          name="history"
-          options={{
-            headerTitle: 'Scan History',
-            headerTitleAlign: 'center',
-            headerTitleStyle: {
-              fontFamily: 'Satoshi-Bold',
-            },
-            headerShadowVisible: false,
-          }}
-        />
+        <Stack.Screen name="profile" options={{ headerShown: false }} />
         <Stack.Screen
           name="product-details"
           options={{
-            headerTitle: 'Product Details',
-            headerTitleAlign: 'center',
+            headerTitle: "Product Details",
+            headerTitleAlign: "center",
             headerTitleStyle: {
-              fontFamily: 'Satoshi-Bold',
+              fontFamily: "Satoshi-Bold"
             },
-            headerShadowVisible: false,
+            headerShadowVisible: false
           }}
         />
         <Stack.Screen name="+not-found" />
