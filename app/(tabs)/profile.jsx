@@ -51,12 +51,14 @@ export default function ProfileScreen() {
           <ThemedLink key={index} {...item} />
         ))}
       </View>
+
       <View style={{ marginBottom: 32 }}>
         <ThemedText style={{ fontSize: 20 }}>Settings</ThemedText>
         {settings.map((item, index) => (
           <ThemedLink key={index} {...item} />
         ))}
       </View>
+      
       <ThemedButton variant="destructive" label="LOGOUT" />
     </ScrollView>
   );
