@@ -1,12 +1,12 @@
-import { useFonts } from 'expo-font';
-import { SplashScreen, Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useFonts } from "expo-font";
+import { SplashScreen, Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { useEffect } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    'Satoshi-Bold': require('../assets/fonts/Satoshi-Bold.otf'),
+    "Satoshi-Bold": require("../assets/fonts/Satoshi-Bold.otf")
   });
 
   useEffect(() => {
@@ -22,6 +22,7 @@ export default function RootLayout() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Stack>
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
           name="products"

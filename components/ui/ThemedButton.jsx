@@ -1,16 +1,9 @@
-import { Pressable, StyleSheet } from 'react-native';
-import { ThemedText } from './ThemedText';
+import { Pressable, StyleSheet } from "react-native";
+import { ThemedText } from "./ThemedText";
 
-export function ThemedButton({ style, variant = 'default', label, ...props }) {
+export function ThemedButton({ style, variant = "default", label, ...props }) {
   return (
-    <Pressable
-      style={[
-        styles.default,
-        variant === 'destructive' ? styles.destructive : undefined,
-        style,
-      ]}
-      {...props}
-    >
+    <Pressable style={[styles.default, variant === "destructive" ? styles.destructive : undefined, style]} {...props}>
       <ThemedText style={styles.label}>{label}</ThemedText>
     </Pressable>
   );
@@ -18,16 +11,16 @@ export function ThemedButton({ style, variant = 'default', label, ...props }) {
 
 const styles = StyleSheet.create({
   default: {
-    backgroundColor: '#91bef8',
+    backgroundColor: "#91bef8",
     borderRadius: 16,
-    padding: 16,
+    padding: 16
   },
   destructive: {
-    backgroundColor: '#ff3b30',
+    backgroundColor: "#ff3b30"
   },
   label: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    textAlign: 'center',
-  },
+    textAlign: "center"
+  }
 });

@@ -1,8 +1,8 @@
-import { StyleSheet, View, ScrollView } from 'react-native';
+import { StyleSheet, View, ScrollView } from "react-native";
 
-import { HorizontalList } from '@/components/lists/HorizontalList';
-import { ThemedLink } from '@/components/ui/ThemedLink';
-import { ThemedText } from '@/components/ui/ThemedText';
+import { HorizontalList } from "@/components/lists/HorizontalList";
+import { ThemedLink } from "@/components/ui/ThemedLink";
+import { ThemedText } from "@/components/ui/ThemedText";
 
 export default function HomeScreen() {
   return (
@@ -18,6 +18,8 @@ export default function HomeScreen() {
       <ThemedLink label="Green Food List" href="/products" />
       <HorizontalList itemCount={9} />
 
+      <ThemedLink label="Auth Test" href="/auth" />
+
       <View style={styles.bottomSpacing} />
     </ScrollView>
   );
@@ -25,16 +27,18 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     flex: 1,
-    padding: 24,
+    padding: 24
   },
+
   greeting: {
     fontSize: 20,
-    textAlign: 'center',
-    marginBottom: 32,
+    textAlign: "center",
+    marginBottom: 32
   },
+
   bottomSpacing: {
-    height: 100,
-  },
+    height: 100
+  }
 });
