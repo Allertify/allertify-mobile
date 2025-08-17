@@ -1,8 +1,8 @@
-import { StyleSheet, View, ScrollView } from 'react-native';
+import { StyleSheet, View, ScrollView } from "react-native";
 
-import { HorizontalList } from '@/components/HorizontalList';
-import { ThemedLink } from '@/components/ThemedLink';
-import { ThemedText } from '@/components/ThemedText';
+import { HorizontalList } from "@/components/HorizontalList";
+import { ThemedLink } from "@/components/ThemedLink";
+import { ThemedText } from "@/components/ThemedText";
 
 export default function HomeScreen() {
   return (
@@ -25,13 +25,13 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     flex: 1,
     padding: 24,
   },
   greeting: {
     fontSize: 20,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 32,
   },
   bottomSpacing: {

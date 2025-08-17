@@ -1,17 +1,17 @@
-import { Link, Stack } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
+import { Link, Stack } from "expo-router";
+import { StyleSheet, View } from "react-native";
 
-import { ThemedText } from '@/components/ThemedText';
+import { ThemedText } from "@/components/ThemedText";
 
 export default function NotFoundScreen() {
   return (
     <>
       <Stack.Screen
         options={{
-          title: 'Oops! Not Found',
-          headerTitleAlign: 'center',
+          title: "Oops! Not Found",
+          headerTitleAlign: "center",
           headerTitleStyle: {
-            fontFamily: 'Satoshi-Bold',
+            fontFamily: "Satoshi-Bold",
           },
         }}
       />
@@ -27,17 +27,17 @@ export default function NotFoundScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
+    alignItems: "center",
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   text: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 16,
   },
   link: {
     fontSize: 16,
-    textDecorationLine: 'underline',
+    textDecorationLine: "underline",
   },
 });

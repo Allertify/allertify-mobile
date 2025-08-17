@@ -1,13 +1,9 @@
-import { ScrollView, StyleSheet } from 'react-native';
-import { PlaceholderItem } from './PlaceholderItem';
+import { ScrollView, StyleSheet } from "react-native";
+import { PlaceholderItem } from "./PlaceholderItem";
 
 export function HorizontalList({ itemCount = 5 }) {
   return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={styles.horizontalList}
-    >
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.horizontalList}>
       {Array.from({ length: itemCount }, (_, index) => (
         <PlaceholderItem key={index} />
       ))}
