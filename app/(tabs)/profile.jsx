@@ -3,8 +3,33 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import { ThemedButton } from "@/components/ui/ThemedButton";
 import { ThemedLink } from "@/components/ui/ThemedLink";
 import { ThemedText } from "@/components/ui/ThemedText";
+import { useRouter } from "expo-router";
 
 const account = [
+  {
+    href: "/profile/history",
+    label: "History",
+    description: "View your scan history"
+  },
+  {
+    href: "/profile/products",
+    label: "My Products",
+    description: "View your Red and Green Lists"
+  }
+];
+
+const settings = [
+  {
+    href: "/profile/allergens",
+    label: "Allergens",
+    description: "Manage your allergens"
+  },
+
+  {
+    href: "/profile/emergency-contacts",
+    label: "Emergency Contacts",
+    description: "Manage your emergency contacts"
+  },
   {
     href: "/profile/full-name",
     label: "Full Name",
@@ -22,25 +47,13 @@ const account = [
   }
 ];
 
-const settings = [
-  {
-    href: "/profile/allergens",
-    label: "Allergens",
-    description: "Manage your allergens"
-  },
-  {
-    href: "/profile/scan-history",
-    label: "History",
-    description: "View your scan history"
-  },
-  {
-    href: "/profile/emergency-contacts",
-    label: "Emergency Contacts",
-    description: "Manage your emergency contacts"
-  }
-];
-
 export default function ProfileScreen() {
+  const router = useRouter();
+
+  const handlePressLogout = () => {
+    router.push("/auth");
+  };
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       <View style={{ marginBottom: 16 }}>
@@ -56,7 +69,7 @@ export default function ProfileScreen() {
         ))}
       </View>
 
-      <ThemedButton variant="destructive" label="LOGOUT" />
+      <ThemedButton variant="destructive" label="LOGOUT" onPress={handlePressLogout} />
     </ScrollView>
   );
 }

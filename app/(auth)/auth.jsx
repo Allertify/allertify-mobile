@@ -57,13 +57,11 @@ const styles = StyleSheet.create({
     color: "#6327B7",
     textAlign: "center",
     marginBottom: 0,
-    fontWeight: "bold"
   },
 
   subtitle: {
     fontSize: 18,
     textAlign: "center",
-    fontWeight: "bold",
     color: "#AB6FFE"
   },
 
@@ -141,7 +139,6 @@ const styles = StyleSheet.create({
   or_text: {
     alignSelf: "center",
     fontSize: 17,
-    fontWeight: "bold",
     color: "#F7ECFF"
   }
 });
