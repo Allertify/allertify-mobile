@@ -22,6 +22,24 @@ export default function ProfileLayout() {
           headerTitle: "My Products"
         }}
       />
+      <Stack.Screen
+        name="full-name"
+        options={{
+          headerTitle: "Change Full Name"
+        }}
+      />
+      <Stack.Screen
+        name="email"
+        options={{
+          headerTitle: "Change Email"
+        }}
+      />
+      <Stack.Screen
+        name="password"
+        options={{
+          headerTitle: "Change Password"
+        }}
+      />
     </Stack>
   );
 }
