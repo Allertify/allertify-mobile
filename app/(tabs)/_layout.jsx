@@ -1,58 +1,46 @@
-import { Ionicons } from '@expo/vector-icons';
-import { Tabs } from 'expo-router';
+import { Ionicons } from "@expo/vector-icons";
+import { Tabs } from "expo-router";
 
 export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerTitleAlign: 'center',
+        headerTitleAlign: "center",
         headerTitleStyle: {
-          fontFamily: 'Satoshi-Bold',
+          fontFamily: "Satoshi-Bold",
         },
         headerShadowVisible: false,
-        tabBarActiveTintColor: '#91bef8',
+        tabBarActiveTintColor: "#91bef8",
         tabBarLabelStyle: {
-          fontFamily: 'Satoshi-Bold',
+          fontFamily: "Satoshi-Bold",
         },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          headerTitle: 'Allertify',
-          title: 'Home',
+          headerTitle: "Allertify",
+          title: "Home",
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? 'home' : 'home-outline'}
-              color={color}
-              size={24}
-            />
+            <Ionicons name={focused ? "home" : "home-outline"} color={color} size={24} />
           ),
         }}
       />
       <Tabs.Screen
         name="scan"
         options={{
-          title: 'Scan',
+          title: "Scan",
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? 'barcode' : 'barcode-outline'}
-              color={color}
-              size={24}
-            />
+            <Ionicons name={focused ? "barcode" : "barcode-outline"} color={color} size={24} />
           ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profile',
+          title: "Profile",
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? 'person' : 'person-outline'}
-              color={color}
-              size={24}
-            />
+            <Ionicons name={focused ? "person" : "person-outline"} color={color} size={24} />
           ),
         }}
       />

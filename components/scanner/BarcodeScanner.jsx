@@ -1,12 +1,17 @@
-import { CameraView, useCameraPermissions } from 'expo-camera';
-import { useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { CameraView, useCameraPermissions } from "expo-camera";
+import { useState } from "react";
+import { Alert, StyleSheet, View } from "react-native";
 
+<<<<<<< HEAD:components/scanner/BarcodeScanner.jsx
 import { ThemedButton } from '../ui/ThemedButton';
 import { ThemedText } from '../ui/ThemedText';
+=======
+import { ThemedButton } from "@/components/ThemedButton";
+import { ThemedText } from "@/components/ThemedText";
+>>>>>>> eb96bf4 (Feat: Added prettier for consistent codebase):components/BarcodeScanner.jsx
 
 export function BarcodeScanner({ style, containerStyle }) {
-  const [facing, setFacing] = useState('back');
+  const [facing, setFacing] = useState("back");
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
 
@@ -26,24 +31,20 @@ export function BarcodeScanner({ style, containerStyle }) {
   }
 
   const handlePress = () => {
-    setFacing((current) => (current === 'back' ? 'front' : 'back'));
+    setFacing((current) => (current === "back" ? "front" : "back"));
   };
 
   const handleBarcodeScanned = (scanningResult) => {
     if (scanned) return;
     setScanned(true);
 
-    Alert.alert(
-      'Barcode Scanned',
-      `Type: ${scanningResult.type}\nData: ${scanningResult.data}`,
-      [
-        { text: 'OK', onPress: () => setScanned(false) },
-        {
-          text: 'Scan Again',
-          onPress: () => setScanned(false),
-        },
-      ]
-    );
+    Alert.alert("Barcode Scanned", `Type: ${scanningResult.type}\nData: ${scanningResult.data}`, [
+      { text: "OK", onPress: () => setScanned(false) },
+      {
+        text: "Scan Again",
+        onPress: () => setScanned(false),
+      },
+    ]);
   };
 
   return (
@@ -53,15 +54,7 @@ export function BarcodeScanner({ style, containerStyle }) {
         facing={facing}
         onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
         barcodeScannerSettings={{
-          barcodeTypes: [
-            'ean13',
-            'ean8',
-            'upc_a',
-            'upc_e',
-            'code39',
-            'code128',
-            'qr',
-          ],
+          barcodeTypes: ["ean13", "ean8", "upc_a", "upc_e", "code39", "code128", "qr"],
         }}
       />
       <View style={styles.overlay}>
@@ -74,7 +67,7 @@ export function BarcodeScanner({ style, containerStyle }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     padding: 24,
     alignItems: 'center',
     justifyContent: 'center',
@@ -84,12 +77,12 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   overlay: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
     padding: 40,
   },
 });

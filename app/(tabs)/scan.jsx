@@ -1,6 +1,6 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from "react-native";
 
-import { BarcodeScanner } from '@/components/scanner/BarcodeScanner';
+import { BarcodeScanner } from "@/components/scanner/BarcodeScanner";
 
 export default function ScanProductScreen() {
   return (
