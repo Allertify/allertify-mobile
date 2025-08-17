@@ -83,7 +83,6 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "rgba(0, 0, 0, 0.7)",
-    borderRadius: 8
   },
   scanFrame: {
     position: "absolute",

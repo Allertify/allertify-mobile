@@ -12,7 +12,7 @@ export function ThemedButton({ style, variant = "default", label, ...props }) {
 const styles = StyleSheet.create({
   default: {
     backgroundColor: "#91bef8",
-    borderRadius: 16,
+    borderRadius: 12,
     padding: 16
   },
   destructive: {
