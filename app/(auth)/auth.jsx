@@ -1,6 +1,4 @@
-import { ScrollView, StyleSheet, View, Text, Image, Pressable } from "react-native";
-import { WebView } from "react-native-webview";
-
+import { StyleSheet, View, Text, Image, Pressable } from "react-native";
 import Waves from "../../assets/waves_bg.svg";
 import Burger from "../../assets/burger.png";
 
