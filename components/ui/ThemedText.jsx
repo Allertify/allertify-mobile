@@ -6,6 +6,6 @@ export function ThemedText({ style, ...props }) {
 
 const styles = StyleSheet.create({
   default: {
-    fontFamily: "Satoshi-Bold",
-  },
+    fontFamily: "Satoshi-Bold"
+  }
 });

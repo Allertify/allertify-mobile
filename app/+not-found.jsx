@@ -11,8 +11,8 @@ export default function NotFoundScreen() {
           title: "Oops! Not Found",
           headerTitleAlign: "center",
           headerTitleStyle: {
-            fontFamily: "Satoshi-Bold",
-          },
+            fontFamily: "Satoshi-Bold"
+          }
         }}
       />
       <View style={styles.container}>
@@ -29,15 +29,15 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "center"
   },
   text: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 16,
+    marginBottom: 16
   },
   link: {
     fontSize: 16,
-    textDecorationLine: "underline",
-  },
+    textDecorationLine: "underline"
+  }
 });

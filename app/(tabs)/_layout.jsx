@@ -7,13 +7,13 @@ export default function TabsLayout() {
       screenOptions={{
         headerTitleAlign: "center",
         headerTitleStyle: {
-          fontFamily: "Satoshi-Bold",
+          fontFamily: "Satoshi-Bold"
         },
         headerShadowVisible: false,
         tabBarActiveTintColor: "#91bef8",
         tabBarLabelStyle: {
-          fontFamily: "Satoshi-Bold",
-        },
+          fontFamily: "Satoshi-Bold"
+        }
       }}
     >
       <Tabs.Screen
@@ -23,7 +23,7 @@ export default function TabsLayout() {
           title: "Home",
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? "home" : "home-outline"} color={color} size={24} />
-          ),
+          )
         }}
       />
       <Tabs.Screen
@@ -32,7 +32,7 @@ export default function TabsLayout() {
           title: "Scan",
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? "barcode" : "barcode-outline"} color={color} size={24} />
-          ),
+          )
         }}
       />
       <Tabs.Screen
@@ -41,7 +41,7 @@ export default function TabsLayout() {
           title: "Profile",
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? "person" : "person-outline"} color={color} size={24} />
-          ),
+          )
         }}
       />
     </Tabs>
