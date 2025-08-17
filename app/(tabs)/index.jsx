@@ -1,8 +1,8 @@
 import { StyleSheet, View, ScrollView } from 'react-native';
 
-import { HorizontalList } from '@/components/HorizontalList';
-import { ThemedLink } from '@/components/ThemedLink';
-import { ThemedText } from '@/components/ThemedText';
+import { HorizontalList } from '@/components/lists/HorizontalList';
+import { ThemedLink } from '@/components/ui/ThemedLink';
+import { ThemedText } from '@/components/ui/ThemedText';
 
 export default function HomeScreen() {
   return (

@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import { PlaceholderItem } from './PlaceholderItem';
+import { PlaceholderItem } from '../common/PlaceholderItem';
 
 export function VerticalList({ itemCount = 5 }) {
   return (
