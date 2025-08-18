@@ -80,32 +80,30 @@ export default function SignUpScreen() {
         contentContainerStyle={styles.container}
         keyboardShouldPersistTaps="handled" // Keep the keyboard open after tapping
       >
+        <View style={styles.header_container}>
+          <View style={styles.title_container}>
+            <Pressable
+              onPress={() => {
+                router.push("/auth");
+              }}
+            >
+              <Ionicons name="chevron-back-circle" size={35} color="#AB6FFE" />
+            </Pressable>
+            <ThemedText style={styles.title}>Sign Up</ThemedText>
+          </View>
+          <ThemedText style={styles.subtitle}>Let's get to know eachother!</ThemedText>
+          <Animated.Image
+            source={isFocused ? VeggiesFocus : VeggiesDefault}
+            style={[styles.veggies, { transform: [{ scale: scaleAnim }] }]}
+          />
+        </View>
+
         <LinearGradient
           colors={["#FFDA6A", "#FFA245", "#9A59FF"]}
-          style={styles.gradientBackground}
+          style={styles.form_container}
           start={[0, 0]}
           end={[0, 1]}
         >
-          <View style={styles.header_container}>
-            <View style={styles.title_container}>
-              <Pressable
-                onPress={() => {
-                  router.push("/auth");
-                }}
-              >
-                <Ionicons name="chevron-back-circle" size={35} color="#ffff" />
-              </Pressable>
-              <ThemedText style={styles.title}>Sign Up</ThemedText>
-            </View>
-            <ThemedText style={styles.subtitle}>Let's get to know eachother!</ThemedText>
-            <Animated.Image
-              source={isFocused ? VeggiesFocus : VeggiesDefault}
-              style={[styles.veggies, { transform: [{ scale: scaleAnim }] }]}
-            />
-          </View>
-        </LinearGradient>
-
-        <View style={styles.form_container}>
           <View style={styles.input_container}>
             <ThemedText style={styles.label}>Full Name</ThemedText>
             <TextInput
@@ -174,7 +172,7 @@ export default function SignUpScreen() {
               Register
             </ThemedText>
           </Pressable>
-        </View>
+        </LinearGradient>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -192,18 +190,15 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     alignItems: "center",
-    backgroundColor: "#9A59FF"
-  },
-
-  gradientBackground: {
-    width: "100%"
+    backgroundColor: "#F7ECFF"
   },
 
   header_container: {
     padding: 30,
     width: "100%",
     alignItems: "center",
-    paddingBottom: 0
+    paddingBottom: 0,
+    backgroundColor: "#F7ECFF"
   },
 
   title_container: {
@@ -230,7 +225,6 @@ const styles = StyleSheet.create({
   },
 
   form_container: {
-    backgroundColor: "#F7ECFF",
     padding: 30,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
@@ -243,7 +237,7 @@ const styles = StyleSheet.create({
 
   label: {
     fontSize: 18,
-    color: "#0a70e4ff",
+    color: "#FFFFFF",
     fontWeight: "600",
     marginBottom: 8
   },
@@ -307,7 +301,7 @@ const styles = StyleSheet.create({
   },
 
   errorText: {
-    color: "#B72727",
+    color: "#6b0000ff",
     textAlign: "center",
     fontSize: 16,
     fontWeight: "bold",
@@ -316,7 +310,7 @@ const styles = StyleSheet.create({
   },
 
   successText: {
-    color: "#27b779ff",
+    color: "#00532eff",
     textAlign: "center",
     fontSize: 16,
     fontWeight: "bold",
