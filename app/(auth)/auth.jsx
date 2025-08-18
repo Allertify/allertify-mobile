@@ -14,7 +14,7 @@ export default function AuthScreen() {
         <ThemedText style={styles.subtitle}>Know what you're biting into.</ThemedText>
       </View>
 
-      <Waves style={styles.waves} width="100%" height={280} preserveAspectRatio="none" />
+      <Waves style={styles.waves} width="100%" height={300} preserveAspectRatio="none" />
 
       <Image source={Burger} style={styles.burger} />
 
