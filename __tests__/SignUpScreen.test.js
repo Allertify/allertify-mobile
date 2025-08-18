@@ -3,7 +3,6 @@ import { render, fireEvent, waitFor, act } from "@testing-library/react-native";
 import { Animated } from "react-native";
 import SignUpScreen from "@/app/(auth)/signup";
 
-// Mock expo-router
 const mockPush = jest.fn();
 jest.mock("expo-router", () => ({
   useRouter: () => ({
@@ -11,7 +10,6 @@ jest.mock("expo-router", () => ({
   })
 }));
 
-// Mock ThemedText component
 jest.mock("@/components/ui/ThemedText", () => {
   const { Text } = require("react-native");
   return {
@@ -23,7 +21,6 @@ jest.mock("@/components/ui/ThemedText", () => {
   };
 });
 
-// Mock useValidateForm hook
 const mockUseValidateForm = jest.fn();
 const mockAreAllFieldsFilled = jest.fn();
 
@@ -32,7 +29,6 @@ jest.mock("@/utils/useValidateForm", () => ({
   areAllFieldsFilled: (...args) => mockAreAllFieldsFilled(...args)
 }));
 
-// Mock expo-linear-gradient
 jest.mock("expo-linear-gradient", () => ({
   LinearGradient: ({ children, ...props }) => {
     const { View } = require("react-native");
@@ -40,17 +36,14 @@ jest.mock("expo-linear-gradient", () => ({
   }
 }));
 
-// Mock Ionicons
 jest.mock("@expo/vector-icons/Ionicons", () => {
   const { View } = require("react-native");
   return ({ name, size, color, ...props }) => <View {...props} testID={`icon-${name}`} />;
 });
 
-// Mock assets
 jest.mock("@/assets/veggies_default.png", () => "veggies-default-image");
 jest.mock("@/assets/veggies_focus.png", () => "veggies-focus-image");
 
-// Mock Animated
 const mockAnimatedValue = {
   setValue: jest.fn(),
   addListener: jest.fn(),
@@ -67,7 +60,6 @@ jest.spyOn(Animated, "spring").mockImplementation(mockAnimatedSpring);
 describe("SignUpScreen", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    // Default mock implementations
     mockAreAllFieldsFilled.mockReturnValue(false);
     mockUseValidateForm.mockReturnValue({
       success: true,
@@ -77,110 +69,110 @@ describe("SignUpScreen", () => {
   });
 
   describe("Component Rendering", () => {
+    // Test 1: Verify all UI elements render correctly
     it("renders correctly with all form fields", () => {
       const { getByText, getByPlaceholderText } = render(<SignUpScreen />);
 
-      // Check title and subtitle
-      expect(getByText("Sign Up")).toBeTruthy();
-      expect(getByText("Let's get to know eachother!")).toBeTruthy();
-
-      // Check form labels
-      expect(getByText("Full Name")).toBeTruthy();
-      expect(getByText("Email")).toBeTruthy();
-      expect(getByText("Phone Number")).toBeTruthy();
-      expect(getByText("Password")).toBeTruthy();
-
-      // Check input fields
-      expect(getByPlaceholderText("Enter your full name")).toBeTruthy();
-      expect(getByPlaceholderText("Enter your email")).toBeTruthy();
-      expect(getByPlaceholderText("Enter your phone number")).toBeTruthy();
-      expect(getByPlaceholderText("Enter your password")).toBeTruthy();
-
-      // Check register button
-      expect(getByText("Register")).toBeTruthy();
+      expect(getByText("Create Your Account")).toBeTruthy();
+      expect(getByText("We're here to assist you make safer food choices. Are you ready?")).toBeTruthy();
+      expect(getByPlaceholderText("Enter full name")).toBeTruthy();
+      expect(getByPlaceholderText("Enter email")).toBeTruthy();
+      expect(getByPlaceholderText("Enter phone number")).toBeTruthy();
+      expect(getByPlaceholderText("Enter password")).toBeTruthy();
+      expect(getByText("Get Started")).toBeTruthy();
+      expect(getByText("Already have an account?")).toBeTruthy();
+      expect(getByText("Log In")).toBeTruthy();
     });
 
-    it("renders back button icon", () => {
-      const { getByTestId } = render(<SignUpScreen />);
-      expect(getByTestId("icon-chevron-back-circle")).toBeTruthy();
+    // Test 2: Verify back button renders with correct elements
+    it("renders back button with updated icon and text", () => {
+      const { getByTestId, getByText } = render(<SignUpScreen />);
+      expect(getByTestId("icon-chevron-back")).toBeTruthy();
+      expect(getByText("Back")).toBeTruthy();
     });
 
+    // Test 3: Verify component renders without crashing
     it("renders default veggies image initially", () => {
       const { getByTestId } = render(<SignUpScreen />);
-      // Since we mocked the animated image, we can test through testID
-      // The actual test should verify the component renders without crashing
       expect(getByTestId).toBeDefined();
 
-      // Alternative: test that no error occurs during rendering
       const { getByText } = render(<SignUpScreen />);
-      expect(getByText("Sign Up")).toBeTruthy();
+      expect(getByText("Create Your Account")).toBeTruthy();
     });
   });
 
   describe("Form Input Handling", () => {
+    // Test 4: Full name input updates correctly
     it("updates fullName field when text is entered", () => {
       const { getByPlaceholderText } = render(<SignUpScreen />);
-      const fullNameInput = getByPlaceholderText("Enter your full name");
+      const fullNameInput = getByPlaceholderText("Enter full name");
 
       fireEvent.changeText(fullNameInput, "John Doe");
 
       expect(fullNameInput.props.value).toBe("John Doe");
     });
 
+    // Test 5: Email input updates correctly
     it("updates email field when text is entered", () => {
       const { getByPlaceholderText } = render(<SignUpScreen />);
-      const emailInput = getByPlaceholderText("Enter your email");
+      const emailInput = getByPlaceholderText("Enter email");
 
       fireEvent.changeText(emailInput, "john@example.com");
 
       expect(emailInput.props.value).toBe("john@example.com");
     });
 
+    // Test 6: Phone number input updates correctly
     it("updates phoneNumber field when text is entered", () => {
       const { getByPlaceholderText } = render(<SignUpScreen />);
-      const phoneInput = getByPlaceholderText("Enter your phone number");
+      const phoneInput = getByPlaceholderText("Enter phone number");
 
       fireEvent.changeText(phoneInput, "1234567890");
 
       expect(phoneInput.props.value).toBe("1234567890");
     });
 
+    // Test 7: Password input updates correctly
     it("updates password field when text is entered", () => {
       const { getByPlaceholderText } = render(<SignUpScreen />);
-      const passwordInput = getByPlaceholderText("Enter your password");
+      const passwordInput = getByPlaceholderText("Enter password");
 
       fireEvent.changeText(passwordInput, "password123");
 
       expect(passwordInput.props.value).toBe("password123");
     });
 
+    // Test 8: Email input has correct keyboard settings
     it("email input has correct keyboard type and auto-capitalization", () => {
       const { getByPlaceholderText } = render(<SignUpScreen />);
-      const emailInput = getByPlaceholderText("Enter your email");
+      const emailInput = getByPlaceholderText("Enter email");
 
       expect(emailInput.props.keyboardType).toBe("email-address");
       expect(emailInput.props.autoCapitalize).toBe("none");
     });
 
+    // Test 9: Phone input has correct keyboard type
     it("phone input has correct keyboard type", () => {
       const { getByPlaceholderText } = render(<SignUpScreen />);
-      const phoneInput = getByPlaceholderText("Enter your phone number");
+      const phoneInput = getByPlaceholderText("Enter phone number");
 
       expect(phoneInput.props.keyboardType).toBe("phone-pad");
     });
 
+    // Test 10: Password input is secure
     it("password input has secure text entry enabled", () => {
       const { getByPlaceholderText } = render(<SignUpScreen />);
-      const passwordInput = getByPlaceholderText("Enter your password");
+      const passwordInput = getByPlaceholderText("Enter password");
 
       expect(passwordInput.props.secureTextEntry).toBe(true);
     });
   });
 
   describe("Focus and Animation Handling", () => {
+    // Test 11: Focus triggers scale animation and image change
     it("triggers animation and changes image on input focus", async () => {
       const { getByPlaceholderText } = render(<SignUpScreen />);
-      const fullNameInput = getByPlaceholderText("Enter your full name");
+      const fullNameInput = getByPlaceholderText("Enter full name");
 
       await act(async () => {
         fireEvent(fullNameInput, "focus");
@@ -195,21 +187,17 @@ describe("SignUpScreen", () => {
           useNativeDriver: true
         })
       );
-
-      // Since the animated image is mocked, we verify the animation was triggered
-      // The actual image switching would happen in the real component
     });
 
+    // Test 12: Blur resets scale animation and image
     it("triggers animation and resets image on input blur", async () => {
       const { getByPlaceholderText } = render(<SignUpScreen />);
-      const fullNameInput = getByPlaceholderText("Enter your full name");
+      const fullNameInput = getByPlaceholderText("Enter full name");
 
-      // First focus
       await act(async () => {
         fireEvent(fullNameInput, "focus");
       });
 
-      // Then blur
       await act(async () => {
         fireEvent(fullNameInput, "blur");
       });
@@ -223,32 +211,26 @@ describe("SignUpScreen", () => {
           useNativeDriver: true
         })
       );
-
-      // Since the animated image is mocked, we verify the animation was triggered
-      // The actual image switching would happen in the real component
     });
   });
 
   describe("Form Validation and Submission", () => {
+    // Test 13: Button disabled when fields not filled
     it("register button is disabled when fields are not filled", () => {
       mockAreAllFieldsFilled.mockReturnValue(false);
       const { getByText } = render(<SignUpScreen />);
 
-      const registerText = getByText("Register");
+      const registerText = getByText("Get Started");
       expect(registerText).toBeTruthy();
 
-      // Test the disabled functionality by trying to press the button
-      // When disabled, the onPress should not trigger validation
       fireEvent.press(registerText);
 
-      // Verify validation was NOT called (button was disabled)
       expect(mockUseValidateForm).not.toHaveBeenCalled();
       expect(mockPush).not.toHaveBeenCalled();
-
-      // Verify the disabled state function was called
       expect(mockAreAllFieldsFilled).toHaveBeenCalled();
     });
 
+    // Test 14: Button enabled when all fields filled
     it("register button is enabled when all fields are filled", () => {
       mockAreAllFieldsFilled.mockReturnValue(true);
       mockUseValidateForm.mockReturnValue({
@@ -259,20 +241,17 @@ describe("SignUpScreen", () => {
 
       const { getByText } = render(<SignUpScreen />);
 
-      const registerText = getByText("Register");
+      const registerText = getByText("Get Started");
       expect(registerText).toBeTruthy();
 
-      // Test that button works when enabled
       fireEvent.press(registerText);
 
-      // Verify validation WAS called (button was enabled)
       expect(mockUseValidateForm).toHaveBeenCalled();
-      expect(mockPush).toHaveBeenCalledWith("/");
-
-      // Verify the enabled state function was called
+      expect(mockPush).toHaveBeenCalledWith("/onboarding");
       expect(mockAreAllFieldsFilled).toHaveBeenCalled();
     });
 
+    // Test 15: Full form submission and navigation
     it("calls validation and navigates on successful registration", async () => {
       mockAreAllFieldsFilled.mockReturnValue(true);
       mockUseValidateForm.mockReturnValue({
@@ -283,13 +262,12 @@ describe("SignUpScreen", () => {
 
       const { getByText, getByPlaceholderText } = render(<SignUpScreen />);
 
-      // Fill in form data
-      fireEvent.changeText(getByPlaceholderText("Enter your full name"), "John Doe");
-      fireEvent.changeText(getByPlaceholderText("Enter your email"), "john@example.com");
-      fireEvent.changeText(getByPlaceholderText("Enter your phone number"), "1234567890");
-      fireEvent.changeText(getByPlaceholderText("Enter your password"), "password123");
+      fireEvent.changeText(getByPlaceholderText("Enter full name"), "John Doe");
+      fireEvent.changeText(getByPlaceholderText("Enter email"), "john@example.com");
+      fireEvent.changeText(getByPlaceholderText("Enter phone number"), "1234567890");
+      fireEvent.changeText(getByPlaceholderText("Enter password"), "password123");
 
-      const registerButton = getByText("Register");
+      const registerButton = getByText("Get Started");
 
       await act(async () => {
         fireEvent.press(registerButton);
@@ -305,9 +283,10 @@ describe("SignUpScreen", () => {
         ["fullName", "email", "phoneNumber", "password"]
       );
 
-      expect(mockPush).toHaveBeenCalledWith("/");
+      expect(mockPush).toHaveBeenCalledWith("/onboarding");
     });
 
+    // Test 16: Error message display on validation failure
     it("displays error message on validation failure", async () => {
       mockAreAllFieldsFilled.mockReturnValue(true);
       mockUseValidateForm.mockReturnValue({
@@ -317,7 +296,7 @@ describe("SignUpScreen", () => {
       });
 
       const { getByText, queryByText } = render(<SignUpScreen />);
-      const registerButton = getByText("Register");
+      const registerButton = getByText("Get Started");
 
       await act(async () => {
         fireEvent.press(registerButton);
@@ -331,6 +310,7 @@ describe("SignUpScreen", () => {
       expect(mockPush).not.toHaveBeenCalled();
     });
 
+    // Test 17: Success message display on validation success
     it("displays success message on successful validation", async () => {
       mockAreAllFieldsFilled.mockReturnValue(true);
       mockUseValidateForm.mockReturnValue({
@@ -340,7 +320,7 @@ describe("SignUpScreen", () => {
       });
 
       const { getByText, queryByText } = render(<SignUpScreen />);
-      const registerButton = getByText("Register");
+      const registerButton = getByText("Get Started");
 
       await act(async () => {
         fireEvent.press(registerButton);
@@ -353,10 +333,11 @@ describe("SignUpScreen", () => {
       expect(queryByText("Invalid email format")).toBeFalsy();
     });
 
+    // Test 18: Disabled button prevents form submission
     it("does not submit form when button is disabled", () => {
       mockAreAllFieldsFilled.mockReturnValue(false);
       const { getByText } = render(<SignUpScreen />);
-      const registerButton = getByText("Register").parent;
+      const registerButton = getByText("Get Started").parent;
 
       fireEvent.press(registerButton);
 
@@ -368,11 +349,20 @@ describe("SignUpScreen", () => {
   describe("Navigation", () => {
     it("navigates back to auth screen when back button is pressed", () => {
       const { getByTestId } = render(<SignUpScreen />);
-      const backButton = getByTestId("icon-chevron-back-circle").parent;
+      const backButton = getByTestId("icon-chevron-back").parent;
 
       fireEvent.press(backButton);
 
       expect(mockPush).toHaveBeenCalledWith("/auth");
+    });
+
+    it("navigates to login screen when login link is pressed", () => {
+      const { getByText } = render(<SignUpScreen />);
+      const loginLink = getByText("Log In").parent;
+
+      fireEvent.press(loginLink);
+
+      expect(mockPush).toHaveBeenCalledWith("/login");
     });
   });
 
@@ -397,7 +387,7 @@ describe("SignUpScreen", () => {
       const { getByText, queryByText, rerender } = render(<SignUpScreen />);
 
       await act(async () => {
-        fireEvent.press(getByText("Register"));
+        fireEvent.press(getByText("Get Started"));
       });
 
       expect(getByText("Invalid email format")).toBeTruthy();
@@ -412,7 +402,7 @@ describe("SignUpScreen", () => {
       rerender(<SignUpScreen />);
 
       await act(async () => {
-        fireEvent.press(getByText("Register"));
+        fireEvent.press(getByText("Get Started"));
       });
 
       await waitFor(() => {
@@ -427,10 +417,10 @@ describe("SignUpScreen", () => {
       const { getByPlaceholderText } = render(<SignUpScreen />);
 
       const inputs = [
-        getByPlaceholderText("Enter your full name"),
-        getByPlaceholderText("Enter your email"),
-        getByPlaceholderText("Enter your phone number"),
-        getByPlaceholderText("Enter your password")
+        getByPlaceholderText("Enter full name"),
+        getByPlaceholderText("Enter email"),
+        getByPlaceholderText("Enter phone number"),
+        getByPlaceholderText("Enter password")
       ];
 
       inputs.forEach((input) => {
