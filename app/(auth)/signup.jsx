@@ -177,15 +177,17 @@ export default function SignUpScreen() {
               </ThemedText>
             </Pressable>
 
-            <Pressable
-              onPress={() => {
-                router.push("/login");
-              }}
-            >
-              <ThemedText style={styles.loginText}>
-                Already have an account? <ThemedText style={styles.loginLink}>Log In</ThemedText>
+            <ThemedText style={styles.loginText}>
+              Already have an account?{" "}
+              <ThemedText
+                onPress={() => {
+                  router.push("/login");
+                }}
+                style={styles.loginLink}
+              >
+                Log In
               </ThemedText>
-            </Pressable>
+            </ThemedText>
           </View>
         </ScrollView>
       </LinearGradient>

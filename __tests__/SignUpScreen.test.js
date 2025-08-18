@@ -80,7 +80,7 @@ describe("SignUpScreen", () => {
       expect(getByPlaceholderText("Enter phone number")).toBeTruthy();
       expect(getByPlaceholderText("Enter password")).toBeTruthy();
       expect(getByText("Get Started")).toBeTruthy();
-      expect(getByText("Already have an account?")).toBeTruthy();
+      expect(getByText(/Already have an account/)).toBeTruthy(); // partial text check
       expect(getByText("Log In")).toBeTruthy();
     });
 
