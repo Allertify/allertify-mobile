@@ -1,9 +1,8 @@
 import { Image, Pressable, StyleSheet, View } from "react-native";
-
-import { ThemedText } from "@/components/ui/ThemedText";
-import Burger from "../../assets/burger.png";
-import Waves from "../../assets/waves_bg.svg";
 import { useRouter } from "expo-router";
+import { ThemedText } from "@/components/ui/ThemedText";
+import Burger from "@/assets/burger.png";
+import Waves from "@/assets/waves_bg.svg";
 
 export default function AuthScreen() {
   const router = useRouter();
@@ -15,19 +14,26 @@ export default function AuthScreen() {
         <ThemedText style={styles.subtitle}>Know what you're biting into.</ThemedText>
       </View>
 
-      <Waves style={styles.waves} width="100%" height={280} preserveAspectRatio="none" />
+      <Waves style={styles.waves} width="100%" height={300} preserveAspectRatio="none" />
 
       <Image source={Burger} style={styles.burger} />
 
       <View style={styles.buttons_area}>
-        <Pressable style={styles.signup_button} onPress={() => {}}>
+        <Pressable
+          style={styles.signup_button}
+          onPress={() => {
+            router.push("/signup");
+          }}
+        >
           <ThemedText style={styles.signup_button_text}>Sign Up</ThemedText>
         </Pressable>
+
         <View style={styles.or_container}>
           <View style={styles.line} />
           <ThemedText style={styles.or_text}>or</ThemedText>
           <View style={styles.line} />
         </View>
+
         <Pressable
           style={styles.login_button}
           onPress={() => {
@@ -56,7 +62,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     color: "#6327B7",
     textAlign: "center",
-    marginBottom: 0,
+    marginBottom: 0
   },
 
   subtitle: {
@@ -67,12 +73,11 @@ const styles = StyleSheet.create({
 
   burger: {
     position: "absolute",
-    top: 170,
+    top: 160,
     alignSelf: "center",
-    width: 330,
-    height: 300,
-    zIndex: 2,
-    backgroundColor: "transparent"
+    width: 350,
+    height: 350,
+    zIndex: 2
   },
 
   waves: {
