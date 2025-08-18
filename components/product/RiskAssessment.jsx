@@ -1,31 +1,26 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from "react-native";
 
-import { ThemedText } from '../ui/ThemedText';
+import { ThemedText } from "../ui/ThemedText";
 
 export function RiskAssessment({ riskLevel }) {
-  const getRiskStyle = (level) => {
-    switch (level) {
-      case 'low':
-        return styles.lowRisk;
-      case 'high':
-        return styles.highRisk;
-      default:
-        return styles.mediumRisk;
-    }
+  const level = (riskLevel || "").toString().trim();
+
+  const getRiskStyle = () => {
+    if (level === "SAFE") return styles.lowRisk;
+    if (level === "UNSAFE") return styles.highRisk;
+    return styles.highRisk;
   };
 
-  const getRiskText = (level) => {
-    return `${level.charAt(0).toUpperCase() + level.slice(1)} Risk`;
+  const getRiskText = () => {
+    return level || "Unknown";
   };
 
   return (
     <View style={styles.section}>
       <ThemedText style={styles.sectionTitle}>Risk Assessment</ThemedText>
       <View style={styles.riskContainer}>
-        <View style={[styles.riskBadge, getRiskStyle(riskLevel)]}>
-          <ThemedText style={styles.riskText}>
-            {getRiskText(riskLevel)}
-          </ThemedText>
+        <View style={[styles.riskBadge, getRiskStyle()]}>
+          <ThemedText style={styles.riskText}>{getRiskText()}</ThemedText>
         </View>
       </View>
     </View>
@@ -34,32 +29,29 @@ export function RiskAssessment({ riskLevel }) {
 
 const styles = StyleSheet.create({
   section: {
-    marginBottom: 32,
+    marginBottom: 32
   },
   sectionTitle: {
     fontSize: 18,
-    marginBottom: 12,
+    marginBottom: 12
   },
   riskContainer: {
-    marginBottom: 8,
+    marginBottom: 8
   },
   riskBadge: {
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start"
   },
   lowRisk: {
-    backgroundColor: '#D4EDDA',
-  },
-  mediumRisk: {
-    backgroundColor: '#FFF3CD',
+    backgroundColor: "#D4EDDA"
   },
   highRisk: {
-    backgroundColor: '#F8D7DA',
+    backgroundColor: "#F8D7DA"
   },
   riskText: {
     fontSize: 14,
-    color: '#000',
-  },
+    color: "#000"
+  }
 });

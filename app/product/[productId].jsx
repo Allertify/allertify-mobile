@@ -12,12 +12,9 @@ import { Colors } from "@/constants/Colors";
 import { useProduct } from "@/hooks/useProduct";
 
 export default function ProductDetailsScreen() {
-  const { productId } = useLocalSearchParams();
+  const { productId: barcode } = useLocalSearchParams();
 
-  // hardcode for now, use user data later
-  const allergies = ["Nuts", "Clams"];
-
-  const { data: product, isLoading, error, isError } = useProduct(productId, allergies);
+  const { data, isLoading, error, isError } = useProduct(barcode);
 
   if (isLoading) {
     return (
@@ -35,7 +32,7 @@ export default function ProductDetailsScreen() {
     );
   }
 
-  if (!product) {
+  if (!data) {
     return (
       <View style={styles.errorContainer}>
         <Text style={styles.errorText}>Product not found</Text>
@@ -47,23 +44,22 @@ export default function ProductDetailsScreen() {
     <View style={styles.screen}>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <View style={styles.imageContainer}>
-          <ProductImage imageUrl={product.image_url} />
+          <ProductImage imageUrl={data.product?.imageUrl} />
         </View>
 
         <ProductBasicInfo
           product={{
-            id: productId,
-            name: product.product_name,
-            brand: "Unknown",
-            barcode: productId,
-            image: product.image_url
+            name: data.product?.name,
+            barcode: data.product?.barcode
           }}
         />
 
-        <RiskAssessment riskLevel={product.analysis.risk_assessment} />
-        <AllergensList allergens={product.analysis.allergens_detected} />
-        <Analysis analysis={product.analysis.reason} />
-        <Ingredients ingredients={product.ingredients} />
+        <RiskAssessment riskLevel={data.riskLevel} />
+        {Array.isArray(data.matchedAllergens) && data.matchedAllergens.length > 0 && (
+          <AllergensList allergens={data.matchedAllergens} />
+        )}
+        {!!data.riskExplanation && <Analysis analysis={data.riskExplanation} />}
+        {!!data.product?.ingredients && <Ingredients ingredients={data.product.ingredients} />}
 
         <View style={styles.bottomSpacing} />
       </ScrollView>
