@@ -1,15 +1,27 @@
+import { useFocusEffect } from "@react-navigation/native";
 import { CameraView, useCameraPermissions } from "expo-camera";
-import { useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import { useRouter } from "expo-router";
+import { useCallback, useState } from "react";
+import { StyleSheet, View } from "react-native";
 
 import { ThemedButton } from "@/components/ui/ThemedButton";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { ScannerFrame } from "./ScannerFrame";
 
-export function BarcodeScanner({ style, containerStyle }) {
+export function BarcodeScanner({ containerStyle }) {
   const [facing, setFacing] = useState("back");
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
+  const router = useRouter();
+
+  useFocusEffect(
+    useCallback(() => {
+      setScanned(false);
+      return () => {
+        setScanned(false);
+      };
+    }, [])
+  );
 
   if (!permission) {
     return <View />;
@@ -31,14 +43,7 @@ export function BarcodeScanner({ style, containerStyle }) {
   const handleBarcodeScanned = (scanningResult) => {
     if (scanned) return;
     setScanned(true);
-
-    Alert.alert("Barcode Scanned", `Type: ${scanningResult.type}\nData: ${scanningResult.data}`, [
-      { text: "OK", onPress: () => setScanned(false) },
-      {
-        text: "Scan Again",
-        onPress: () => setScanned(false)
-      }
-    ]);
+    router.push(`/product/${scanningResult.data}`);
   };
 
   return (

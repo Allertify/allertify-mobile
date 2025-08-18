@@ -60,6 +60,6 @@ const styles = StyleSheet.create({
   },
   riskText: {
     fontSize: 14,
-    color: '#856404',
+    color: '#000',
   },
 });
