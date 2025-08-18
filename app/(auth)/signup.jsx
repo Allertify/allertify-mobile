@@ -43,6 +43,8 @@ export default function SignUpScreen() {
     if (validationResult.success) {
       setErrorMessage("");
       setSuccessMessage(validationResult.successMessage);
+
+      console.log(formData);
       router.push("/onboarding");
     } else {
       setSuccessMessage("");
@@ -249,7 +251,7 @@ const styles = StyleSheet.create({
 
   title_container: {
     alignItems: "center",
-    marginBottom: 30
+    marginBottom: 10
   },
 
   title: {
