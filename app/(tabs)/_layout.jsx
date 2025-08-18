@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 
@@ -10,7 +11,7 @@ export default function TabsLayout() {
           fontFamily: "Satoshi-Bold"
         },
         headerShadowVisible: false,
-        tabBarActiveTintColor: "#91bef8",
+        tabBarActiveTintColor: Colors.blue,
         tabBarLabelStyle: {
           fontFamily: "Satoshi-Bold"
         }

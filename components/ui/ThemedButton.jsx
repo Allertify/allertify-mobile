@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet } from "react-native";
 import { ThemedText } from "./ThemedText";
+import { Colors } from "@/constants/Colors";
 
 export function ThemedButton({ style, variant = "default", label, ...props }) {
   return (
@@ -11,12 +12,12 @@ export function ThemedButton({ style, variant = "default", label, ...props }) {
 
 const styles = StyleSheet.create({
   default: {
-    backgroundColor: "#91bef8",
+    backgroundColor: Colors.blue,
     borderRadius: 12,
     padding: 16
   },
   destructive: {
-    backgroundColor: "#ff3b30"
+    backgroundColor: Colors.red
   },
   label: {
     color: "#fff",

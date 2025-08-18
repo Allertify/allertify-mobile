@@ -4,9 +4,11 @@ import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-nat
 import { AllergensList } from "@/components/product/AllergensList";
 import { Analysis } from "@/components/product/Analysis";
 import { Ingredients } from "@/components/product/Ingredients";
+import { ProductActions } from "@/components/product/ProductActions";
 import { ProductBasicInfo } from "@/components/product/ProductBasicInfo";
 import { ProductImage } from "@/components/product/ProductImage";
 import { RiskAssessment } from "@/components/product/RiskAssessment";
+import { Colors } from "@/constants/Colors";
 import { useProduct } from "@/hooks/useProduct";
 
 export default function ProductDetailsScreen() {
@@ -20,7 +22,7 @@ export default function ProductDetailsScreen() {
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color={Colors.blue} />
       </View>
     );
   }
@@ -42,29 +44,39 @@ export default function ProductDetailsScreen() {
   }
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <View style={styles.imageContainer}>
-        <ProductImage imageUrl={product.image_url} />
-      </View>
+    <View style={styles.screen}>
+      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+        <View style={styles.imageContainer}>
+          <ProductImage imageUrl={product.image_url} />
+        </View>
 
-      <ProductBasicInfo
-        product={{
-          name: product.product_name,
-          barcode: productId
-        }}
-      />
+        <ProductBasicInfo
+          product={{
+            id: productId,
+            name: product.product_name,
+            brand: "Unknown",
+            barcode: productId,
+            image: product.image_url
+          }}
+        />
 
-      <RiskAssessment riskLevel={product.analysis.risk_assessment} />
-      <AllergensList allergens={product.analysis.allergens_detected} />
-      <Analysis analysis={product.analysis.reason} />
-      <Ingredients ingredients={product.ingredients} />
+        <RiskAssessment riskLevel={product.analysis.risk_assessment} />
+        <AllergensList allergens={product.analysis.allergens_detected} />
+        <Analysis analysis={product.analysis.reason} />
+        <Ingredients ingredients={product.ingredients} />
 
-      <View style={styles.bottomSpacing} />
-    </ScrollView>
+        <View style={styles.bottomSpacing} />
+      </ScrollView>
+
+      <ProductActions />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1
+  },
   container: {
     backgroundColor: "#fff",
     flex: 1,
@@ -75,7 +87,7 @@ const styles = StyleSheet.create({
     marginBottom: 24
   },
   bottomSpacing: {
-    height: 100
+    height: 120
   },
   loadingContainer: {
     flex: 1,
@@ -92,7 +104,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 16,
-    color: "#ff0000",
+    color: Colors.red,
     textAlign: "center"
   }
 });
