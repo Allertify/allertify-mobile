@@ -4,9 +4,12 @@ import { Animated } from "react-native";
 import SignUpScreen from "@/app/(auth)/signup";
 
 const mockPush = jest.fn();
+const mockBack = jest.fn();
+
 jest.mock("expo-router", () => ({
   useRouter: () => ({
-    push: mockPush
+    push: mockPush,
+    back: mockBack
   })
 }));
 
@@ -353,7 +356,7 @@ describe("SignUpScreen", () => {
 
       fireEvent.press(backButton);
 
-      expect(mockPush).toHaveBeenCalledWith("/auth");
+      expect(mockBack).toHaveBeenCalled();
     });
 
     it("navigates to login screen when login link is pressed", () => {

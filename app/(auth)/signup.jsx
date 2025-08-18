@@ -92,7 +92,7 @@ export default function SignUpScreen() {
             <Pressable
               style={styles.backButton}
               onPress={() => {
-                router.push("/auth");
+                router.back();
               }}
             >
               <Ionicons name="chevron-back" size={24} color="#FFFFFF" />
