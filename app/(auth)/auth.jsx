@@ -77,8 +77,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     width: 350,
     height: 350,
-    zIndex: 2,
-    backgroundColor: "transparent"
+    zIndex: 2
   },
 
   waves: {
