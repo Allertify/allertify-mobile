@@ -1,6 +1,6 @@
 export function useValidateForm(formData, fieldsToValidate = ["fullName", "email", "phoneNumber", "password"]) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*.]).{8,}$/;
   const phoneRegex = /^\d{8,15}$/;
 
   const { fullName, email, phoneNumber, password } = formData;

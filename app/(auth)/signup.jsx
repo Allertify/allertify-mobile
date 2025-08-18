@@ -20,6 +20,7 @@ import VeggiesFocus from "@/assets/veggies_focus.png";
 export default function SignUpScreen() {
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const [formData, setFormData] = useState({
@@ -38,10 +39,13 @@ export default function SignUpScreen() {
 
   function handleRegister() {
     const validationResult = useValidateForm(formData, ["fullName", "email", "phoneNumber", "password"]);
+
     if (validationResult.success) {
       setErrorMessage("");
+      setSuccessMessage(validationResult.successMessage);
       router.push("/");
     } else {
+      setSuccessMessage("");
       setErrorMessage(validationResult.errorMessage);
     }
   }
@@ -155,6 +159,7 @@ export default function SignUpScreen() {
             />
           </View>
           {errorMessage ? <ThemedText style={styles.errorText}>{errorMessage}</ThemedText> : null}
+          {successMessage ? <ThemedText style={styles.successText}>{successMessage}</ThemedText> : null}
           <Pressable
             style={[styles.register_button, !areAllFieldsFilled(formData) && styles.register_button_disabled]}
             onPress={areAllFieldsFilled(formData) ? handleRegister : undefined}
@@ -303,6 +308,15 @@ const styles = StyleSheet.create({
 
   errorText: {
     color: "#B72727",
+    textAlign: "center",
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 10,
+    paddingHorizontal: 10
+  },
+
+  successText: {
+    color: "#27b779ff",
     textAlign: "center",
     fontSize: 16,
     fontWeight: "bold",
