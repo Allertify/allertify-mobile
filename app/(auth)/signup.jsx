@@ -43,7 +43,9 @@ export default function SignUpScreen() {
     if (validationResult.success) {
       setErrorMessage("");
       setSuccessMessage(validationResult.successMessage);
-      router.push("/");
+
+      console.log(formData);
+      router.push("/onboarding");
     } else {
       setSuccessMessage("");
       setErrorMessage(validationResult.errorMessage);
@@ -73,107 +75,124 @@ export default function SignUpScreen() {
   return (
     <KeyboardAvoidingView
       style={styles.keyboardAvoidingContainer}
-      behavior={Platform.OS === "ios" ? "padding" : "height"} // Behavior for iOS and Android
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <ScrollView
+      <LinearGradient
+        colors={["#ffc30fff", "#ff8e1eff", "#8a42ffff"]}
         style={styles.fullScreen}
-        contentContainerStyle={styles.container}
-        keyboardShouldPersistTaps="handled" // Keep the keyboard open after tapping
+        start={[0, 0]}
+        end={[0, 1]}
       >
-        <View style={styles.header_container}>
-          <View style={styles.title_container}>
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.container}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.header_container}>
             <Pressable
+              style={styles.backButton}
               onPress={() => {
-                router.push("/auth");
+                router.back();
               }}
             >
-              <Ionicons name="chevron-back-circle" size={35} color="#AB6FFE" />
+              <Ionicons name="chevron-back" size={24} color="#FFFFFF" />
+              <ThemedText style={styles.backText}>Back</ThemedText>
             </Pressable>
-            <ThemedText style={styles.title}>Sign Up</ThemedText>
           </View>
-          <ThemedText style={styles.subtitle}>Let's get to know eachother!</ThemedText>
-          <Animated.Image
-            source={isFocused ? VeggiesFocus : VeggiesDefault}
-            style={[styles.veggies, { transform: [{ scale: scaleAnim }] }]}
-          />
-        </View>
 
-        <LinearGradient
-          colors={["#FFDA6A", "#FFA245", "#9A59FF"]}
-          style={styles.form_container}
-          start={[0, 0]}
-          end={[0, 1]}
-        >
-          <View style={styles.input_container}>
-            <ThemedText style={styles.label}>Full Name</ThemedText>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter your full name"
-              placeholderTextColor="#6fbefeff"
-              value={formData.fullName}
-              onChangeText={(text) => updateField("fullName", text)}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-            />
-          </View>
-          <View style={styles.input_container}>
-            <ThemedText style={styles.label}>Email</ThemedText>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter your email"
-              placeholderTextColor="#6fbefeff"
-              value={formData.email}
-              onChangeText={(text) => updateField("email", text)}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-            />
-          </View>
-          <View style={styles.input_container}>
-            <ThemedText style={styles.label}>Phone Number</ThemedText>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter your phone number"
-              placeholderTextColor="#6fbefeff"
-              value={formData.phoneNumber}
-              onChangeText={(text) => updateField("phoneNumber", text)}
-              keyboardType="phone-pad"
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-            />
-          </View>
-          <View style={styles.input_container}>
-            <ThemedText style={styles.label}>Password</ThemedText>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter your password"
-              placeholderTextColor="#6fbefeff"
-              value={formData.password}
-              onChangeText={(text) => updateField("password", text)}
-              secureTextEntry
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-            />
-          </View>
-          {errorMessage ? <ThemedText style={styles.errorText}>{errorMessage}</ThemedText> : null}
-          {successMessage ? <ThemedText style={styles.successText}>{successMessage}</ThemedText> : null}
-          <Pressable
-            style={[styles.register_button, !areAllFieldsFilled(formData) && styles.register_button_disabled]}
-            onPress={areAllFieldsFilled(formData) ? handleRegister : undefined}
-            disabled={!areAllFieldsFilled(formData)}
-          >
-            <ThemedText
-              style={[
-                styles.register_button_text,
-                !areAllFieldsFilled(formData) && styles.register_button_text_disabled
-              ]}
+          <View style={styles.form_container}>
+            <View style={styles.title_container}>
+              <ThemedText style={styles.title}>Create Your Account</ThemedText>
+              <ThemedText style={styles.subtitle}>
+                We're here to assist you make safer food choices. Are you ready?
+              </ThemedText>
+              <Animated.Image
+                source={isFocused ? VeggiesFocus : VeggiesDefault}
+                style={[styles.veggies, { transform: [{ scale: scaleAnim }] }]}
+              />
+            </View>
+
+            <View style={styles.input_container}>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter full name"
+                placeholderTextColor="#999"
+                value={formData.fullName}
+                onChangeText={(text) => updateField("fullName", text)}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+              />
+            </View>
+            <View style={styles.input_container}>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter email"
+                placeholderTextColor="#999"
+                value={formData.email}
+                onChangeText={(text) => updateField("email", text)}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+              />
+            </View>
+            <View style={styles.input_container}>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter phone number"
+                placeholderTextColor="#999"
+                value={formData.phoneNumber}
+                onChangeText={(text) => updateField("phoneNumber", text)}
+                keyboardType="phone-pad"
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+              />
+            </View>
+            <View style={styles.input_container}>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter password"
+                placeholderTextColor="#999"
+                value={formData.password}
+                onChangeText={(text) => updateField("password", text)}
+                secureTextEntry
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+              />
+            </View>
+
+            {errorMessage ? <ThemedText style={styles.errorText}>{errorMessage}</ThemedText> : null}
+            {successMessage ? <ThemedText style={styles.successText}>{successMessage}</ThemedText> : null}
+
+            <Pressable
+              style={[styles.register_button, !areAllFieldsFilled(formData) && styles.register_button_disabled]}
+              onPress={areAllFieldsFilled(formData) ? handleRegister : undefined}
+              disabled={!areAllFieldsFilled(formData)}
             >
-              Register
+              <ThemedText
+                style={[
+                  styles.register_button_text,
+                  !areAllFieldsFilled(formData) && styles.register_button_text_disabled
+                ]}
+              >
+                Get Started
+              </ThemedText>
+            </Pressable>
+
+            <ThemedText style={styles.loginText}>
+              Already have an account?{" "}
+              <ThemedText
+                onPress={() => {
+                  router.push("/login");
+                }}
+                style={styles.loginLink}
+              >
+                Log In
+              </ThemedText>
             </ThemedText>
-          </Pressable>
-        </LinearGradient>
-      </ScrollView>
+          </View>
+        </ScrollView>
+      </LinearGradient>
     </KeyboardAvoidingView>
   );
 }
@@ -187,88 +206,102 @@ const styles = StyleSheet.create({
     flex: 1
   },
 
+  scrollView: {
+    flex: 1
+  },
+
   container: {
-    display: "flex",
-    alignItems: "center",
-    backgroundColor: "#F7ECFF"
+    flexGrow: 1,
+    justifyContent: "center",
+    paddingHorizontal: 20
   },
 
   header_container: {
+    paddingBottom: 20,
+    width: "100%"
+  },
+
+  backButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "flex-start"
+  },
+
+  backText: {
+    color: "#FFFFFF",
+    fontSize: 20,
+    marginLeft: 8
+  },
+
+  form_container: {
+    backgroundColor: "white",
+    borderRadius: 20,
     padding: 30,
     width: "100%",
     alignItems: "center",
-    paddingBottom: 0,
-    backgroundColor: "#F7ECFF"
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 8
   },
 
   title_container: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
     alignItems: "center",
-    gap: 20,
     marginBottom: 10
   },
 
   title: {
-    fontSize: 40,
-    color: "#610fd3ff",
+    fontSize: 24,
+    color: "#333",
     textAlign: "center",
-    marginBottom: 0
+    fontWeight: "700",
+    marginBottom: 10
   },
 
   subtitle: {
-    fontSize: 18,
+    fontSize: 14,
     textAlign: "center",
-    color: "#AB6FFE",
-    marginBottom: 30
+    color: "#666",
+    marginBottom: 20,
+    lineHeight: 20
   },
 
-  form_container: {
-    padding: 30,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    width: "100%"
+  veggies: {
+    width: 150,
+    height: 150,
+    marginBottom: 10
   },
 
   input_container: {
-    marginBottom: 15
-  },
-
-  label: {
-    fontSize: 18,
-    color: "#FFFFFF",
-    fontWeight: "600",
-    marginBottom: 8
+    marginBottom: 15,
+    width: "100%"
   },
 
   input: {
-    backgroundColor: "white",
-    borderWidth: 2,
-    borderColor: "#81BCFF",
+    backgroundColor: "#f8f9fa",
+    borderWidth: 1,
+    borderColor: "#e9ecef",
     borderRadius: 12,
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingVertical: 16,
     fontSize: 16,
-    color: "#6327B7",
-    shadowColor: "#81BCFF",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3
+    color: "#333",
+    width: "100%"
   },
 
   register_button: {
-    backgroundColor: "#6327B7",
+    backgroundColor: "#8a42ffff",
     borderRadius: 12,
     paddingVertical: 16,
     paddingHorizontal: 24,
     alignItems: "center",
-    marginTop: 10,
-    shadowColor: "#6327B7",
+    marginTop: 20,
+    width: "100%",
+    shadowColor: "#8a42ffff",
     shadowOffset: {
       width: 0,
       height: 4
@@ -286,35 +319,41 @@ const styles = StyleSheet.create({
 
   register_button_text: {
     color: "white",
-    fontSize: 18,
-    fontWeight: "700"
+    fontSize: 16,
+    fontWeight: "600"
   },
 
   register_button_text_disabled: {
     color: "#AB6FFE"
   },
 
-  veggies: {
-    alignSelf: "center",
-    width: 330,
-    height: 330
+  loginText: {
+    color: "#666",
+    fontSize: 14,
+    marginTop: 20,
+    textAlign: "center"
+  },
+
+  loginLink: {
+    color: "#8a42ffff",
+    fontWeight: "600"
   },
 
   errorText: {
-    color: "#6b0000ff",
+    color: "#dc3545",
     textAlign: "center",
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 10,
+    fontSize: 14,
+    fontWeight: "600",
+    marginTop: 10,
     paddingHorizontal: 10
   },
 
   successText: {
-    color: "#00532eff",
+    color: "#28a745",
     textAlign: "center",
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 10,
+    fontSize: 14,
+    fontWeight: "600",
+    marginTop: 10,
     paddingHorizontal: 10
   }
 });
