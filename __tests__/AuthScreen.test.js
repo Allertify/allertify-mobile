@@ -90,13 +90,13 @@ describe("AuthScreen", () => {
     expect(mockPush).toHaveBeenCalledTimes(1);
   });
 
-  it("navigates to home screen when Login button is pressed", () => {
+  it("navigates to login screen when Login button is pressed", () => {
     const { getByText } = render(<AuthScreen />);
     const loginButton = getByText("Login");
 
     fireEvent.press(loginButton);
 
-    expect(mockPush).toHaveBeenCalledWith("/");
+    expect(mockPush).toHaveBeenCalledWith("/login");
     expect(mockPush).toHaveBeenCalledTimes(1);
   });
 
@@ -128,7 +128,7 @@ describe("AuthScreen", () => {
     expect(mockPush).toHaveBeenCalledWith("/signup");
 
     fireEvent.press(getByText("Login"));
-    expect(mockPush).toHaveBeenCalledWith("/");
+    expect(mockPush).toHaveBeenCalledWith("/login");
   });
 
   it("handles multiple button presses correctly", () => {
@@ -146,7 +146,7 @@ describe("AuthScreen", () => {
     expect(mockPush).toHaveBeenCalledTimes(3);
     expect(mockPush).toHaveBeenNthCalledWith(1, "/signup");
     expect(mockPush).toHaveBeenNthCalledWith(2, "/signup");
-    expect(mockPush).toHaveBeenNthCalledWith(3, "/");
+    expect(mockPush).toHaveBeenNthCalledWith(3, "/login");
   });
 
   it("uses correct router instance", () => {
