@@ -37,7 +37,7 @@ export default function AuthScreen() {
         <Pressable
           style={styles.login_button}
           onPress={() => {
-            router.push("/");
+            router.push("/login");
           }}
         >
           <ThemedText style={styles.login_button_text}>Login</ThemedText>
