@@ -276,7 +276,7 @@ describe("LoginScreen", () => {
           email: "john@example.com",
           password: "password123"
         }),
-        ["email", "password"]
+        ["email"]
       );
 
       expect(mockPush).toHaveBeenCalledWith("/");
@@ -298,7 +298,7 @@ describe("LoginScreen", () => {
         fireEvent.press(loginButton);
       });
 
-      expect(mockUseValidateForm).toHaveBeenCalledWith(expect.any(Object), ["email", "password"]);
+      expect(mockUseValidateForm).toHaveBeenCalledWith(expect.any(Object), ["email"]);
     });
 
     // Test 16: Error message display on validation failure

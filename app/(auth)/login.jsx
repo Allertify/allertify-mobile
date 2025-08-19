@@ -36,7 +36,7 @@ export default function LoginScreen() {
   }
 
   function handleLogin() {
-    const validationResult = useValidateForm(formData, ["email", "password"]);
+    const validationResult = useValidateForm(formData, ["email"]);
 
     if (validationResult.success) {
       setErrorMessage("");
