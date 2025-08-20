@@ -1,7 +1,7 @@
 export function useValidateForm(formData, fieldsToValidate = ["fullName", "email", "phoneNumber", "password"]) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*.]).{8,}$/;
-  const phoneRegex = /^\d{8,15}$/;
+  const phoneRegex = /^\+\d{1,4}\s?\d{8,15}$/;
 
   const { fullName, email, phoneNumber, password } = formData;
 
@@ -27,7 +27,7 @@ export function useValidateForm(formData, fieldsToValidate = ["fullName", "email
     if (!phoneRegex.test(phoneNumber.trim())) {
       return {
         success: false,
-        errorMessage: "Please enter a valid phone number (8-15 digits)."
+        errorMessage: "Please enter a valid phone number (8-15 digits) with your country code (eg. +62)."
       };
     }
   }
