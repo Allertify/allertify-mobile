@@ -1,5 +1,4 @@
 import { useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { AllergensList } from "@/components/product/AllergensList";
@@ -10,27 +9,15 @@ import { ProductBasicInfo } from "@/components/product/ProductBasicInfo";
 import { ProductImage } from "@/components/product/ProductImage";
 import { RiskAssessment } from "@/components/product/RiskAssessment";
 import { Colors } from "@/constants/Colors";
-import { useAuth } from "@/hooks/useAuth";
 import { useProduct } from "@/hooks/useProduct";
+import { useToken } from "@/hooks/useToken";
 
 export default function ProductDetailsScreen() {
   const { productId: barcode } = useLocalSearchParams();
-  const { getStoredUser } = useAuth();
-  const [token, setToken] = useState(null);
-
-  useEffect(() => {
-    const fetchToken = async () => {
-      const storedUser = await getStoredUser();
-      if (storedUser.token) {
-        setToken(storedUser.token);
-      }
-    };
-    fetchToken();
-  }, []);
-
+  const { token, isLoading: tokenLoading } = useToken();
   const { data, isLoading, error, isError } = useProduct(barcode, token);
 
-  if (isLoading) {
+  if (tokenLoading || isLoading) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={Colors.blue} />
