@@ -21,8 +21,6 @@ export function useSavedProducts(token) {
   return useQuery({
     queryKey: ["savedProducts"],
     queryFn: () => fetchSavedProducts(token),
-    enabled: !!token,
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 10
+    enabled: !!token
   });
 }
