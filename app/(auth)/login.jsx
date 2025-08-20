@@ -9,17 +9,19 @@ import {
   KeyboardAvoidingView
 } from "react-native";
 import { useRouter } from "expo-router";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { useValidateForm, areAllFieldsFilled } from "@/utils/useValidateForm";
 import { LinearGradient } from "expo-linear-gradient";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import RamenDefault from "@/assets/ramen_default.png";
 import RamenFocus from "@/assets/ramen_focus.png";
 
 export default function LoginScreen() {
   const router = useRouter();
-  const [errorMessage, setErrorMessage] = useState("");
+  const { login, isLoading, error, clearError, isAuthenticated } = useAuthContext();
+  const [localError, setLocalError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const scaleAnim = useRef(new Animated.Value(1)).current;
@@ -28,25 +30,72 @@ export default function LoginScreen() {
     password: ""
   });
 
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace("/");
+    }
+  }, [isAuthenticated, router]);
+
+  // Clear errors when component mounts or unmounts
+  useEffect(() => {
+    return () => {
+      clearError();
+    };
+  }, [clearError]);
+
   function updateField(field, value) {
     setFormData((prev) => ({
       ...prev,
       [field]: value
     }));
+
+    if (localError) {
+      setLocalError("");
+    }
+    if (error) {
+      clearError();
+    }
+    if (successMessage) {
+      setSuccessMessage("");
+    }
   }
 
-  function handleLogin() {
-    const validationResult = useValidateForm(formData, ["email"]);
+  async function handleLogin() {
+    setLocalError("");
+    setSuccessMessage("");
+    clearError();
 
-    if (validationResult.success) {
-      setErrorMessage("");
-      setSuccessMessage(validationResult.successMessage);
+    // Validate forms
+    const validationResult = useValidateForm(formData, ["email", "password"]);
 
-      console.log(formData);
-      router.push("/");
-    } else {
-      setSuccessMessage("");
-      setErrorMessage(validationResult.errorMessage);
+    if (!validationResult.success) {
+      setLocalError(validationResult.errorMessage);
+      return;
+    }
+
+    // Attempt login
+    try {
+      const loginData = {
+        email: formData.email,
+        password: formData.password
+      };
+
+      const result = await login(loginData);
+
+      if (result.success) {
+        setSuccessMessage("Login successful! Redirecting...");
+
+        // Navigate to home after a brief delay
+        setTimeout(() => {
+          router.replace("/");
+        }, 1000);
+      } else {
+        setLocalError(result.error || "Login failed. Please try again.");
+      }
+    } catch (err) {
+      setLocalError("An unexpected error occurred. Please try again.");
+      console.error("Login error:", err);
     }
   }
 
@@ -70,6 +119,10 @@ export default function LoginScreen() {
     }).start();
   }
 
+  // Show local error first, then auth context error
+  const displayError = localError || error;
+  const isFormDisabled = !areAllFieldsFilled(formData) || isLoading;
+
   return (
     <KeyboardAvoidingView
       style={styles.keyboardAvoidingContainer}
@@ -90,11 +143,14 @@ export default function LoginScreen() {
             <Pressable
               style={styles.backButton}
               onPress={() => {
-                router.back();
+                if (!isLoading) {
+                  router.back();
+                }
               }}
+              disabled={isLoading}
             >
-              <Ionicons name="chevron-back" size={24} color="#FFFFFF" />
-              <ThemedText style={styles.backText}>Back</ThemedText>
+              <Ionicons name="chevron-back" size={24} color={isLoading ? "#CCCCCC" : "#FFFFFF"} />
+              <ThemedText style={[styles.backText, isLoading && styles.disabledText]}>Back</ThemedText>
             </Pressable>
           </View>
 
@@ -104,48 +160,50 @@ export default function LoginScreen() {
               <ThemedText style={styles.subtitle}>Let's get back to making wiser food choices!</ThemedText>
               <Animated.Image
                 source={isFocused ? RamenFocus : RamenDefault}
-                style={[styles.veggies, { transform: [{ scale: scaleAnim }] }]}
+                style={[styles.ramen, { transform: [{ scale: scaleAnim }] }]}
               />
             </View>
 
             <View style={styles.input_container}>
               <TextInput
-                style={styles.input}
+                style={[styles.input, isLoading && styles.inputDisabled]}
                 placeholder="Enter email"
-                placeholderTextColor="#999"
+                placeholderTextColor={isLoading ? "#ccc" : "#999"}
                 value={formData.email}
                 onChangeText={(text) => updateField("email", text)}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 onFocus={handleFocus}
                 onBlur={handleBlur}
+                editable={!isLoading}
               />
             </View>
+
             <View style={styles.input_container}>
               <TextInput
-                style={styles.input}
+                style={[styles.input, isLoading && styles.inputDisabled]}
                 placeholder="Enter password"
-                placeholderTextColor="#999"
+                placeholderTextColor={isLoading ? "#ccc" : "#999"}
                 value={formData.password}
                 onChangeText={(text) => updateField("password", text)}
                 secureTextEntry
                 onFocus={handleFocus}
                 onBlur={handleBlur}
+                editable={!isLoading}
               />
             </View>
 
-            {errorMessage ? <ThemedText style={styles.errorText}>{errorMessage}</ThemedText> : null}
+            {displayError ? <ThemedText style={styles.errorText}>{displayError}</ThemedText> : null}
+
             {successMessage ? <ThemedText style={styles.successText}>{successMessage}</ThemedText> : null}
 
             <Pressable
-              style={[styles.login_button, !areAllFieldsFilled(formData) && styles.login_button_disabled]}
-              onPress={areAllFieldsFilled(formData) ? handleLogin : undefined}
-              disabled={!areAllFieldsFilled(formData)}
+              style={[styles.login_button, isFormDisabled && styles.login_button_disabled]}
+              onPress={!isFormDisabled ? handleLogin : undefined}
+              disabled={isFormDisabled}
             >
-              <ThemedText
-                style={[styles.login_button_text, !areAllFieldsFilled(formData) && styles.login_button_text_disabled]}
-              >
-                Login
+              <ThemedText style={[styles.login_button_text, isFormDisabled && styles.login_button_text_disabled]}>
+                {isLoading ? "Signing In..." : "Login"}
               </ThemedText>
             </Pressable>
 
@@ -153,9 +211,11 @@ export default function LoginScreen() {
               Don't have an account?{" "}
               <ThemedText
                 onPress={() => {
-                  router.push("/signup");
+                  if (!isLoading) {
+                    router.push("/signup");
+                  }
                 }}
-                style={styles.registerLink}
+                style={[styles.registerLink, isLoading && styles.linkDisabled]}
               >
                 Sign Up
               </ThemedText>
@@ -203,6 +263,10 @@ const styles = StyleSheet.create({
     marginLeft: 8
   },
 
+  disabledText: {
+    color: "#CCCCCC"
+  },
+
   form_container: {
     backgroundColor: "white",
     borderRadius: 20,
@@ -240,7 +304,7 @@ const styles = StyleSheet.create({
     lineHeight: 20
   },
 
-  veggies: {
+  ramen: {
     width: 150,
     height: 150,
     marginBottom: 10
@@ -261,6 +325,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#333",
     width: "100%"
+  },
+
+  inputDisabled: {
+    backgroundColor: "#f0f0f0",
+    borderColor: "#ddd",
+    color: "#999"
   },
 
   login_button: {
@@ -307,6 +377,10 @@ const styles = StyleSheet.create({
   registerLink: {
     color: "#8a42ffff",
     fontWeight: "600"
+  },
+
+  linkDisabled: {
+    color: "#ccc"
   },
 
   errorText: {
