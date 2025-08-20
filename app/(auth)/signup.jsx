@@ -9,17 +9,19 @@ import {
   KeyboardAvoidingView
 } from "react-native";
 import { useRouter } from "expo-router";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { useValidateForm, areAllFieldsFilled } from "@/utils/useValidateForm";
 import { LinearGradient } from "expo-linear-gradient";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import VeggiesDefault from "@/assets/veggies_default.png";
 import VeggiesFocus from "@/assets/veggies_focus.png";
 
 export default function SignUpScreen() {
   const router = useRouter();
-  const [errorMessage, setErrorMessage] = useState("");
+  const { register, isLoading, error, clearError } = useAuthContext();
+  const [localError, setLocalError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const scaleAnim = useRef(new Animated.Value(1)).current;
@@ -30,25 +32,73 @@ export default function SignUpScreen() {
     password: ""
   });
 
+  // Clear errors when component mounts or when user starts typing
+  useEffect(() => {
+    return () => {
+      clearError();
+    };
+  }, [clearError]);
+
   function updateField(field, value) {
     setFormData((prev) => ({
       ...prev,
       [field]: value
     }));
+
+    if (localError) {
+      setLocalError("");
+    }
+    if (error) {
+      clearError();
+    }
+    if (successMessage) {
+      setSuccessMessage("");
+    }
   }
 
-  function handleRegister() {
+  async function handleRegister() {
+    setLocalError("");
+    setSuccessMessage("");
+    clearError();
+
+    // Validate forms
     const validationResult = useValidateForm(formData, ["fullName", "email", "phoneNumber", "password"]);
 
-    if (validationResult.success) {
-      setErrorMessage("");
-      setSuccessMessage(validationResult.successMessage);
+    if (!validationResult.success) {
+      setLocalError(validationResult.errorMessage);
+      return;
+    }
 
-      console.log(formData);
-      router.push("/onboarding");
-    } else {
-      setSuccessMessage("");
-      setErrorMessage(validationResult.errorMessage);
+    // Attempt register
+    try {
+      const registrationData = {
+        full_name: formData.fullName,
+        email: formData.email,
+        phone_number: formData.phoneNumber,
+        password: formData.password
+      };
+
+      const result = await register(registrationData);
+
+      if (result.success) {
+        setSuccessMessage("Registration successful! Please check your email for OTP.");
+
+        // Navigate to OTP screen after a brief delay
+        setTimeout(() => {
+          router.push({
+            pathname: "/otp",
+            params: {
+              email: formData.email,
+              phone: formData.phoneNumber
+            }
+          });
+        }, 1500);
+      } else {
+        setLocalError(result.error || "Registration failed. Please try again.");
+      }
+    } catch (err) {
+      setLocalError("An unexpected error occurred. Please try again.");
+      console.error("Registration error:", err);
     }
   }
 
@@ -72,6 +122,10 @@ export default function SignUpScreen() {
     }).start();
   }
 
+  // Show local error first, then auth context error
+  const displayError = localError || error;
+  const isFormDisabled = !areAllFieldsFilled(formData) || isLoading;
+
   return (
     <KeyboardAvoidingView
       style={styles.keyboardAvoidingContainer}
@@ -92,11 +146,14 @@ export default function SignUpScreen() {
             <Pressable
               style={styles.backButton}
               onPress={() => {
-                router.back();
+                if (!isLoading) {
+                  router.back();
+                }
               }}
+              disabled={isLoading}
             >
-              <Ionicons name="chevron-back" size={24} color="#FFFFFF" />
-              <ThemedText style={styles.backText}>Back</ThemedText>
+              <Ionicons name="chevron-back" size={24} color={isLoading ? "#CCCCCC" : "#FFFFFF"} />
+              <ThemedText style={[styles.backText, isLoading && styles.disabledText]}>Back</ThemedText>
             </Pressable>
           </View>
 
@@ -114,68 +171,71 @@ export default function SignUpScreen() {
 
             <View style={styles.input_container}>
               <TextInput
-                style={styles.input}
+                style={[styles.input, isLoading && styles.inputDisabled]}
                 placeholder="Enter full name"
-                placeholderTextColor="#999"
+                placeholderTextColor={isLoading ? "#ccc" : "#999"}
                 value={formData.fullName}
                 onChangeText={(text) => updateField("fullName", text)}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
+                editable={!isLoading}
               />
             </View>
+
             <View style={styles.input_container}>
               <TextInput
-                style={styles.input}
+                style={[styles.input, isLoading && styles.inputDisabled]}
                 placeholder="Enter email"
-                placeholderTextColor="#999"
+                placeholderTextColor={isLoading ? "#ccc" : "#999"}
                 value={formData.email}
                 onChangeText={(text) => updateField("email", text)}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 onFocus={handleFocus}
                 onBlur={handleBlur}
+                editable={!isLoading}
               />
             </View>
+
             <View style={styles.input_container}>
               <TextInput
-                style={styles.input}
+                style={[styles.input, isLoading && styles.inputDisabled]}
                 placeholder="Enter phone number"
-                placeholderTextColor="#999"
+                placeholderTextColor={isLoading ? "#ccc" : "#999"}
                 value={formData.phoneNumber}
                 onChangeText={(text) => updateField("phoneNumber", text)}
                 keyboardType="phone-pad"
                 onFocus={handleFocus}
                 onBlur={handleBlur}
+                editable={!isLoading}
               />
             </View>
+
             <View style={styles.input_container}>
               <TextInput
-                style={styles.input}
+                style={[styles.input, isLoading && styles.inputDisabled]}
                 placeholder="Enter password"
-                placeholderTextColor="#999"
+                placeholderTextColor={isLoading ? "#ccc" : "#999"}
                 value={formData.password}
                 onChangeText={(text) => updateField("password", text)}
                 secureTextEntry
                 onFocus={handleFocus}
                 onBlur={handleBlur}
+                editable={!isLoading}
               />
             </View>
 
-            {errorMessage ? <ThemedText style={styles.errorText}>{errorMessage}</ThemedText> : null}
+            {displayError ? <ThemedText style={styles.errorText}>{displayError}</ThemedText> : null}
+
             {successMessage ? <ThemedText style={styles.successText}>{successMessage}</ThemedText> : null}
 
             <Pressable
-              style={[styles.register_button, !areAllFieldsFilled(formData) && styles.register_button_disabled]}
-              onPress={areAllFieldsFilled(formData) ? handleRegister : undefined}
-              disabled={!areAllFieldsFilled(formData)}
+              style={[styles.register_button, isFormDisabled && styles.register_button_disabled]}
+              onPress={!isFormDisabled ? handleRegister : undefined}
+              disabled={isFormDisabled}
             >
-              <ThemedText
-                style={[
-                  styles.register_button_text,
-                  !areAllFieldsFilled(formData) && styles.register_button_text_disabled
-                ]}
-              >
-                Get Started
+              <ThemedText style={[styles.register_button_text, isFormDisabled && styles.register_button_text_disabled]}>
+                {isLoading ? "Creating Account..." : "Get Started"}
               </ThemedText>
             </Pressable>
 
@@ -183,9 +243,11 @@ export default function SignUpScreen() {
               Already have an account?{" "}
               <ThemedText
                 onPress={() => {
-                  router.push("/login");
+                  if (!isLoading) {
+                    router.push("/login");
+                  }
                 }}
-                style={styles.loginLink}
+                style={[styles.loginLink, isLoading && styles.linkDisabled]}
               >
                 Log In
               </ThemedText>
@@ -231,6 +293,10 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 20,
     marginLeft: 8
+  },
+
+  disabledText: {
+    color: "#CCCCCC"
   },
 
   form_container: {
@@ -293,6 +359,12 @@ const styles = StyleSheet.create({
     width: "100%"
   },
 
+  inputDisabled: {
+    backgroundColor: "#f0f0f0",
+    borderColor: "#ddd",
+    color: "#999"
+  },
+
   register_button: {
     backgroundColor: "#8a42ffff",
     borderRadius: 12,
@@ -337,6 +409,10 @@ const styles = StyleSheet.create({
   loginLink: {
     color: "#8a42ffff",
     fontWeight: "600"
+  },
+
+  linkDisabled: {
+    color: "#ccc"
   },
 
   errorText: {
