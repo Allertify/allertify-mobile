@@ -20,6 +20,8 @@ export default function HomeScreen() {
   }
 
   const recentScans = historyData?.scans?.slice(0, 9) || [];
+  const redFoodList = historyData?.scans?.filter((scan) => scan.listType === "RED") || [];
+  const greenFoodList = historyData?.scans?.filter((scan) => scan.listType === "GREEN") || [];
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -29,12 +31,10 @@ export default function HomeScreen() {
       <HorizontalList itemCount={recentScans.length} type="history" scans={recentScans} />
 
       <ThemedLink label="Red Food List" href="/profile/products" />
-      <HorizontalList itemCount={9} />
+      <HorizontalList itemCount={redFoodList.length} type="history" scans={redFoodList} />
 
       <ThemedLink label="Green Food List" href="/profile/products" />
-      <HorizontalList itemCount={9} />
-
-      <ThemedLink label="Auth Test" href="/auth" />
+      <HorizontalList itemCount={greenFoodList.length} type="history" scans={greenFoodList} />
 
       <View style={styles.bottomSpacing} />
     </ScrollView>
