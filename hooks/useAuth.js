@@ -62,8 +62,8 @@ export const useAuth = () => {
 
       console.log("Login response:", data);
 
-      if (data.token) {
-        await SecureStore.setItemAsync("userToken", data.token);
+      if (data.accessToken) {
+        await SecureStore.setItemAsync("userToken", data.accessToken);
       }
       if (data.user) {
         await SecureStore.setItemAsync("userData", JSON.stringify(data.user));
