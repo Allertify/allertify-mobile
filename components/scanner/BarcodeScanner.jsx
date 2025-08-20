@@ -1,4 +1,4 @@
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { useRouter } from "expo-router";
 import { useCallback, useState } from "react";
@@ -9,10 +9,12 @@ import { ThemedText } from "@/components/ui/ThemedText";
 import { ScannerFrame } from "./ScannerFrame";
 
 export function BarcodeScanner({ containerStyle }) {
-  const [facing, setFacing] = useState("back");
   const [permission, requestPermission] = useCameraPermissions();
+  const [facing, setFacing] = useState("back");
   const [scanned, setScanned] = useState(false);
+
   const router = useRouter();
+  const isFocused = useIsFocused();
 
   useFocusEffect(
     useCallback(() => {
@@ -42,20 +44,27 @@ export function BarcodeScanner({ containerStyle }) {
 
   const handleBarcodeScanned = (scanningResult) => {
     if (scanned) return;
+
     setScanned(true);
-    router.push(`/product/${scanningResult.data}`);
+
+    setTimeout(() => {
+      router.push(`/product/${scanningResult.data}`);
+    }, 100);
   };
 
   return (
     <View style={[styles.container, containerStyle]}>
-      <CameraView
-        style={styles.camera}
-        facing={facing}
-        onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
-        barcodeScannerSettings={{
-          barcodeTypes: ["ean13", "ean8", "upc_a", "upc_e"]
-        }}
-      />
+      {isFocused && (
+        <CameraView
+          key={String(isFocused)}
+          style={styles.camera}
+          facing={facing}
+          onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
+          barcodeScannerSettings={{
+            barcodeTypes: ["ean13", "ean8", "upc_a", "upc_e"]
+          }}
+        />
+      )}
       <ScannerFrame onFlipCamera={handleFlipCamera} />
     </View>
   );

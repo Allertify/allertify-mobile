@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-async function fetchProduct(barcode, token) {
+async function scanProduct(barcode, token) {
   const response = await fetch(`${process.env.EXPO_PUBLIC_API_BASE_URL}/scans/barcode/${barcode}`, {
     method: "POST",
     headers: {
@@ -20,9 +20,7 @@ async function fetchProduct(barcode, token) {
 export function useProduct(barcode, token) {
   return useQuery({
     queryKey: ["product", barcode],
-    queryFn: () => fetchProduct(barcode, token),
-    enabled: !!barcode && !!token,
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 10
+    queryFn: () => scanProduct(barcode, token),
+    enabled: !!barcode && !!token
   });
 }

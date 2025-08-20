@@ -1,10 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 async function fetchHistory(token) {
-  const searchParams = new URLSearchParams();
-  searchParams.set("uniqueByProduct", "true");
-
-  const response = await fetch(`${process.env.EXPO_PUBLIC_API_BASE_URL}/scans/history?${searchParams.toString()}`, {
+  const response = await fetch(`${process.env.EXPO_PUBLIC_API_BASE_URL}/scans/history`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -24,8 +21,6 @@ export function useHistory(token) {
   return useQuery({
     queryKey: ["history"],
     queryFn: () => fetchHistory(token),
-    enabled: !!token,
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 10
+    enabled: !!token
   });
 }

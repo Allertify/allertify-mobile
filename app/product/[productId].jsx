@@ -33,7 +33,7 @@ export default function ProductDetailsScreen() {
     );
   }
 
-  if (!data) {
+  if (!isLoading && !data) {
     return (
       <View style={styles.errorContainer}>
         <Text style={styles.errorText}>Product not found</Text>
