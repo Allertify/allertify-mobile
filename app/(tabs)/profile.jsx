@@ -9,7 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 const account = [
   {
-    href: "/profile/subscriptions",
+    href: "/profile/subscription",
     label: "Subscriptions",
     description: "Manage your subscriptions",
     icon: "heart",
