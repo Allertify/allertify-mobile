@@ -4,23 +4,26 @@ export default function ProfileLayout() {
   return (
     <Stack
       screenOptions={{
-        headerShown: false,
         headerShadowVisible: false,
         headerTitleAlign: "center",
         headerTitleStyle: { fontFamily: "Satoshi-Bold" }
       }}
     >
       <Stack.Screen
+        name="allergens"
+        options={{
+          headerShown: false
+        }}
+      />
+      <Stack.Screen
         name="history"
         options={{
-          headerShown: true,
           headerTitle: "Scan History"
         }}
       />
       <Stack.Screen
         name="products"
         options={{
-          headerShown: true,
           headerTitle: "My Products"
         }}
       />
