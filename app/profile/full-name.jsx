@@ -1,12 +1,31 @@
 import { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 
 import { ThemedButton } from "@/components/ui/ThemedButton";
 import { ThemedInput } from "@/components/ui/ThemedInput";
+import { useUpdateProfile } from "@/hooks/useMutateProfile";
+import { useToken } from "@/hooks/useToken";
+import { useUserData } from "@/hooks/useUserData";
+import { useRouter } from "expo-router";
 
 export default function FullNameScreen() {
   const [firstName, onChangeFirstName] = useState("");
   const [lastName, onChangeLastName] = useState("");
+  const router = useRouter();
+  const { token } = useToken();
+  const { data: userData } = useUserData(token);
+
+  const { mutate: updateProfile, isPending } = useUpdateProfile(
+    token,
+    `${firstName} ${lastName}`,
+    userData.phone_number
+  );
+
+  const onSave = () => {
+    updateProfile({ firstName, lastName });
+    Alert.alert("Profile updated successfully");
+    router.back();
+  };
 
   return (
     <View style={styles.container}>
@@ -22,7 +41,7 @@ export default function FullNameScreen() {
         placeholder="Last Name"
         autoComplete="family-name"
       />
-      <ThemedButton label="Save" />
+      <ThemedButton label="Save" onPress={onSave} disabled={isPending} />
     </View>
   );
 }
