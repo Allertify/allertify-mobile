@@ -17,8 +17,8 @@ export default function ProductsScreen() {
     );
   }
 
-  const greenList = savedProducts?.data?.filter((product) => product.listType === "GREEN") || [];
-  const redList = savedProducts?.data?.filter((product) => product.listType === "RED") || [];
+  const greenList = savedProducts.scans.filter((product) => product.listType === "GREEN") || [];
+  const redList = savedProducts.scans.filter((product) => product.listType === "RED") || [];
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>

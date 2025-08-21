@@ -117,7 +117,7 @@ export const useSettings = () => {
   }, [token, tokenLoading, hasInitialized, getAllergies, getStoredAllergies]);
 
   useEffect(() => {
-    console.log("Allergies state updated:", allergies);
+    // console.log("Allergies state updated:", allergies);
   }, [allergies]);
 
   return {

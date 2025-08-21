@@ -1,14 +1,13 @@
 import { Colors } from "@/constants/Colors";
+import { AuthProvider } from "@/hooks/useAuthContext";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { AuthProvider } from "@/hooks/useAuthContext";
 
 export default function TabsLayout() {
   return (
     <AuthProvider>
       <Tabs
         screenOptions={{
-          headerShown: false,
           headerTitleAlign: "center",
           headerTitleStyle: {
             fontFamily: "Satoshi-Bold"
@@ -42,7 +41,7 @@ export default function TabsLayout() {
         <Tabs.Screen
           name="profile"
           options={{
-            title: "Profile",
+            headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <Ionicons name={focused ? "person" : "person-outline"} color={color} size={24} />
             )

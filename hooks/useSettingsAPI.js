@@ -37,7 +37,7 @@ export const useSettingsAPI = () => {
 
       // Store in AsyncStorage for caching
       await AsyncStorage.setItem("userAllergies", JSON.stringify(allergiesData));
-      console.log("from fetchAllergies API call:", allergiesData);
+      // console.log("from fetchAllergies API call:", allergiesData);
 
       return { success: true, data: allergiesData };
     } catch (error) {
@@ -82,8 +82,8 @@ export const useSettingsAPI = () => {
       // Update AsyncStorage cache
       await AsyncStorage.setItem("userAllergies", JSON.stringify(allergiesList));
 
-      console.log("Successfully updated allergies to:", allergiesList);
-      console.log("Code", response.status);
+      // console.log("Successfully updated allergies to:", allergiesList);
+      // console.log("Code", response.status);
       return { success: true, data: allergiesList };
     } catch (error) {
       console.error("Error while updating allergies", error);

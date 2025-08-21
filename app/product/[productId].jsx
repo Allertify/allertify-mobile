@@ -65,7 +65,7 @@ export default function ProductDetailsScreen() {
         <View style={styles.bottomSpacing} />
       </ScrollView>
 
-      <ProductActions />
+      <ProductActions productId={data.product.id} token={token} />
     </View>
   );
 }
