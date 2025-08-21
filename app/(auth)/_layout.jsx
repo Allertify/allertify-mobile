@@ -8,7 +8,7 @@ export default function AuthLayout() {
         <Stack.Screen name="auth" />
         <Stack.Screen name="signup" />
         <Stack.Screen name="otp" />
-        <Stack.Screen name="onboardingAllergy" />
+        <Stack.Screen name="onboarding-allergy" />
         <Stack.Screen name="login" />
       </Stack>
     </AuthProvider>
