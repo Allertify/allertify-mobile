@@ -47,6 +47,17 @@ export default function RootLayout() {
               headerShadowVisible: false
             }}
           />
+          <Stack.Screen
+            name="scan/[scanId]"
+            options={{
+              headerTitle: "Scan Details",
+              headerTitleAlign: "center",
+              headerTitleStyle: {
+                fontFamily: "Satoshi-Bold"
+              },
+              headerShadowVisible: false
+            }}
+          />
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style="auto" />

@@ -1,8 +1,11 @@
+import { useRouter } from "expo-router";
 import { Image, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { PlaceholderItem } from "../common/PlaceholderItem";
 import { ProductItem } from "../product/ProductItem";
 
 export function HorizontalList({ itemCount = 5, type = "placeholder", listType = "green", scans = [] }) {
+  const router = useRouter();
+
   const renderItem = (index) => {
     if (type === "history" && scans[index]) {
       const scan = scans[index];
@@ -11,8 +14,7 @@ export function HorizontalList({ itemCount = 5, type = "placeholder", listType =
           key={scan.id}
           style={styles.historyItem}
           onPress={() => {
-            // TODO: Navigate to saved items if scan.isSaved is true, otherwise show product details
-            // For now, no navigation is implemented
+            router.push(`/scan/${scan.id}`);
           }}
         >
           <Image
