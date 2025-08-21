@@ -1,6 +1,5 @@
 import React from "react";
 import { render, fireEvent, waitFor, act } from "@testing-library/react-native";
-import AllergyOnboardingScreen from "@/app/(auth)/onboarding";
 
 const mockPush = jest.fn();
 const mockBack = jest.fn();
