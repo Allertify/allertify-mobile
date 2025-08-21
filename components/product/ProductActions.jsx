@@ -1,19 +1,47 @@
-import { StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import { ThemedButton } from "@/components/ui/ThemedButton";
+import { useSaveProduct } from "@/hooks/useSaveProduct";
 
-export function ProductActions({ style, onAddGreen, onAddRed }) {
+export function ProductActions({ style, productId, token }) {
+  const { mutate: saveToRed, isPending: isSavingRed } = useSaveProduct(productId, "RED", token);
+  const { mutate: saveToGreen, isPending: isSavingGreen } = useSaveProduct(productId, "GREEN", token);
+
+  const onAddRed = () => {
+    saveToRed(undefined, {
+      onSuccess: (message) => {
+        Alert.alert(message || "Product added to red list");
+      },
+      onError: (err) => {
+        Alert.alert("Failed to add to red list", err?.message || "Unknown error");
+      }
+    });
+  };
+
+  const onAddGreen = () => {
+    saveToGreen(undefined, {
+      onSuccess: (message) => {
+        Alert.alert(message || "Product added to green list");
+      },
+      onError: (err) => {
+        Alert.alert("Failed to add to green list", err?.message || "Unknown error");
+      }
+    });
+  };
+
   return (
     <View style={[styles.floatingActions, style]}>
       <ThemedButton
         style={styles.actionButton}
         variant="destructive"
-        label={"+ RED LIST"}
-        onPress={onAddRed || (() => {})}
+        label={isSavingRed ? "ADDING..." : "+ RED LIST"}
+        onPress={onAddRed}
+        disabled={isSavingRed || isSavingGreen}
       />
       <ThemedButton
         style={[styles.actionButton, styles.greenButton]}
-        label={"+ GREEN LIST"}
-        onPress={onAddGreen || (() => {})}
+        label={isSavingGreen ? "ADDING..." : "+ GREEN LIST"}
+        onPress={onAddGreen}
+        disabled={isSavingRed || isSavingGreen}
       />
     </View>
   );

@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }) => {
   // Handle resend OTP by re-registering
   const handleResendOTP = async (email) => {
     if (registrationData && registrationData.email === email) {
-      console.log("Re-registering user to resend OTP");
+      // console.log("Re-registering user to resend OTP");
       const reregisterResult = await auth.register(registrationData);
       return reregisterResult;
     }

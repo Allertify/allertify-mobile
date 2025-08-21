@@ -13,12 +13,14 @@ export default function ProfileLayout() {
       <Stack.Screen
         name="history"
         options={{
+          headerShown: true,
           headerTitle: "Scan History"
         }}
       />
       <Stack.Screen
         name="products"
         options={{
+          headerShown: true,
           headerTitle: "My Products"
         }}
       />
