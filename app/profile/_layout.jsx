@@ -4,7 +4,7 @@ export default function ProfileLayout() {
   return (
     <Stack
       screenOptions={{
-        headerShown: true,
+        headerShown: false,
         headerShadowVisible: false,
         headerTitleAlign: "center",
         headerTitleStyle: { fontFamily: "Satoshi-Bold" }

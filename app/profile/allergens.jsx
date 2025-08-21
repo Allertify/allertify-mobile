@@ -6,25 +6,27 @@ import {
   ScrollView,
   Platform,
   KeyboardAvoidingView,
-  FlatList
+  FlatList,
+  Alert
 } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSettings } from "@/hooks/useSettings";
+import { useToken } from "@/hooks/useToken";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-export default function onboardingAllergyScreen() {
+export default function AllergensScreen() {
   const router = useRouter();
-
-  const { updateAllergies, clearError, error } = useSettings();
+  const { updateAllergies, clearError, allergies, getAllergies, error } = useSettings();
   const [selectedAllergies, setSelectedAllergies] = useState([]);
   const [customAllergy, setCustomAllergy] = useState("");
   const [customAllergiesList, setCustomAllergiesList] = useState([]);
-
   const [localError, setLocalError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const commonAllergies = [
     { id: "peanuts", name: "Peanuts", icon: "nutrition" },
@@ -40,6 +42,30 @@ export default function onboardingAllergyScreen() {
     { id: "gluten", name: "Gluten", icon: "fast-food" },
     { id: "chocolate", name: "Chocolate", icon: "cafe" }
   ];
+
+  useEffect(() => {
+    if (allergies && allergies.length > 0) {
+      const commonAllergyIds = commonAllergies.map((a) => a.id);
+      const existingCommon = [];
+      const existingCustom = [];
+
+      allergies.forEach((allergy) => {
+        if (commonAllergyIds.includes(allergy)) {
+          existingCommon.push(allergy);
+        } else {
+          existingCustom.push(allergy);
+          existingCommon.push(`custom_${allergy}`);
+        }
+      });
+
+      setSelectedAllergies(existingCommon);
+      setCustomAllergiesList(existingCustom);
+    } else {
+      // Reset state when no allergies
+      setSelectedAllergies([]);
+      setCustomAllergiesList([]);
+    }
+  }, [allergies]);
 
   function toggleAllergy(allergyId) {
     setSelectedAllergies((prev) =>
@@ -62,9 +88,39 @@ export default function onboardingAllergyScreen() {
     setSelectedAllergies((prev) => prev.filter((id) => id !== `custom_${allergy}`));
   }
 
-  async function handleSendAllergy() {
+  function clearAllAllergies() {
+    Alert.alert("Clear All Allergies", "Are you sure you want to remove all allergies? This action cannot be undone.", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Clear All",
+        style: "destructive",
+        onPress: async () => {
+          setIsLoading(true);
+          try {
+            const result = await updateAllergies([]); // Pass empty array instead of undefined variable
+
+            if (result.success) {
+              setSuccessMessage("Successfully cleared all allergies!");
+              setSelectedAllergies([]);
+              setCustomAllergiesList([]);
+            } else {
+              setLocalError(result.error || "Failed to clear allergies. Please try again.");
+            }
+          } catch (err) {
+            setLocalError("An unexpected error occurred. Please try again.");
+            console.error("Clear allergies error:", err);
+          } finally {
+            setIsLoading(false);
+          }
+        }
+      }
+    ]);
+  }
+
+  async function handleUpdateAllergies() {
     setLocalError("");
     setSuccessMessage("");
+    setIsLoading(true);
     clearError();
 
     const allAllergies = [...selectedAllergies.filter((id) => !id.startsWith("custom_")), ...customAllergiesList];
@@ -74,18 +130,17 @@ export default function onboardingAllergyScreen() {
 
       if (result.success) {
         setSuccessMessage("Successfully updated allergies!");
-
         setTimeout(() => {
-          router.replace({
-            pathname: "/"
-          });
-        }, 1500);
+          setSuccessMessage("");
+        }, 3000);
       } else {
         setLocalError(result.error || "Allergies update failed. Please try again.");
       }
     } catch (err) {
       setLocalError("An unexpected error occurred. Please try again.");
-      console.error("Registration error:", err);
+      console.error("Update allergies error:", err);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -116,7 +171,28 @@ export default function onboardingAllergyScreen() {
     );
   }
 
+  function renderCurrentAllergyItem(allergy, index) {
+    const isCommon = commonAllergies.some((common) => common.id === allergy);
+    const commonAllergy = commonAllergies.find((common) => common.id === allergy);
+
+    return (
+      <View key={index} style={styles.currentAllergyItem}>
+        <View style={styles.currentAllergyIcon}>
+          <Ionicons name={isCommon ? commonAllergy.icon : "medical"} size={20} color="#8a42ffff" />
+        </View>
+        <ThemedText style={styles.currentAllergyText}>{isCommon ? commonAllergy.name : allergy}</ThemedText>
+        {!isCommon && (
+          <View style={styles.customBadge}>
+            <ThemedText style={styles.customBadgeText}>Custom</ThemedText>
+          </View>
+        )}
+      </View>
+    );
+  }
+
   const displayError = localError || error;
+  const totalSelectedCount = selectedAllergies.length;
+  const hasCurrentAllergies = allergies && allergies.length > 0;
 
   return (
     <KeyboardAvoidingView
@@ -136,12 +212,7 @@ export default function onboardingAllergyScreen() {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.header_container}>
-            <Pressable
-              style={styles.backButton}
-              onPress={() => {
-                router.back();
-              }}
-            >
+            <Pressable style={styles.backButton} onPress={() => router.back()}>
               <Ionicons name="chevron-back" size={24} color="#FFFFFF" />
               <ThemedText style={styles.backText}>Back</ThemedText>
             </Pressable>
@@ -155,15 +226,34 @@ export default function onboardingAllergyScreen() {
                 start={[0, 0]}
                 end={[1, 0.8]}
               >
-                <Ionicons name="medical" size={40} color="#FFFFFF" />
+                <Ionicons name="create" size={40} color="#FFFFFF" />
               </LinearGradient>
-              <ThemedText style={styles.title}>Tell us about your allergies</ThemedText>
+              <ThemedText style={styles.title}>Edit Your Allergies</ThemedText>
               <ThemedText style={styles.subtitle}>
-                Help us keep you safe by letting us know about any food allergies you have!
+                Update your allergy information to keep your profile current and safe.
               </ThemedText>
             </View>
 
-            {/* Common Allergies Grid */}
+            {hasCurrentAllergies && (
+              <View style={styles.currentAllergiesSection}>
+                <View style={styles.sectionHeader}>
+                  <ThemedText style={styles.sectionTitle}>Current Allergies</ThemedText>
+                  <Pressable onPress={clearAllAllergies} style={styles.clearAllButton}>
+                    <ThemedText style={styles.clearAllText}>Clear All</ThemedText>
+                  </Pressable>
+                </View>
+                <View style={styles.currentAllergiesList}>{allergies.map(renderCurrentAllergyItem)}</View>
+              </View>
+            )}
+
+            {!hasCurrentAllergies && (
+              <View style={styles.noAllergiesContainer}>
+                <Ionicons name="checkmark-circle" size={48} color="#28a745" />
+                <ThemedText style={styles.noAllergiesText}>No allergies currently recorded</ThemedText>
+                <ThemedText style={styles.noAllergiesSubtext}>Add any food allergies you have below</ThemedText>
+              </View>
+            )}
+
             <View style={styles.allergiesSection}>
               <ThemedText style={styles.sectionTitle}>Common Allergies</ThemedText>
               <FlatList
@@ -177,7 +267,6 @@ export default function onboardingAllergyScreen() {
               />
             </View>
 
-            {/* Custom Allergy Input */}
             <View style={styles.customSection}>
               <ThemedText style={styles.sectionTitle}>Add Custom Allergy</ThemedText>
               <View style={styles.customInputContainer}>
@@ -207,7 +296,6 @@ export default function onboardingAllergyScreen() {
                 </Pressable>
               </View>
 
-              {/* Custom Allergies Tags */}
               {customAllergiesList.length > 0 && (
                 <View style={styles.customAllergiesContainer}>
                   <ThemedText style={styles.customAllergiesTitle}>Your Custom Allergies:</ThemedText>
@@ -216,11 +304,10 @@ export default function onboardingAllergyScreen() {
               )}
             </View>
 
-            {/* Selected Count */}
-            {selectedAllergies.length > 0 && (
+            {totalSelectedCount > 0 && (
               <View style={styles.selectedContainer}>
                 <ThemedText style={styles.selectedText}>
-                  {selectedAllergies.length} allerg{selectedAllergies.length === 1 ? "y" : "ies"} selected
+                  {totalSelectedCount} allerg{totalSelectedCount === 1 ? "y" : "ies"} selected
                 </ThemedText>
               </View>
             )}
@@ -228,23 +315,22 @@ export default function onboardingAllergyScreen() {
             {displayError ? <ThemedText style={styles.errorText}>{displayError}</ThemedText> : null}
             {successMessage ? <ThemedText style={styles.successText}>{successMessage}</ThemedText> : null}
 
-            {/* Continue Button */}
-            <Pressable style={styles.continue_button} onPress={handleSendAllergy}>
+            <Pressable
+              style={[styles.continue_button, isLoading && styles.buttonDisabled]}
+              onPress={handleUpdateAllergies}
+              disabled={isLoading}
+            >
               <LinearGradient
-                colors={["#fff5aaff", "#42e895ff", "#4284ffff"]}
+                colors={isLoading ? ["#ccc", "#999"] : ["#fff5aaff", "#42e895ff", "#4284ffff"]}
                 style={styles.continue_button_gradient}
                 start={[0, 0]}
                 end={[0.8, 0]}
               >
-                <ThemedText style={styles.continue_button_text}>Continue</ThemedText>
+                <ThemedText style={styles.continue_button_text}>
+                  {isLoading ? "Updating..." : "Update Allergies"}
+                </ThemedText>
               </LinearGradient>
             </Pressable>
-
-            <ThemedText style={styles.skipText}>
-              <ThemedText onPress={() => router.push("/")} style={styles.skipLink}>
-                Skip for now
-              </ThemedText>
-            </ThemedText>
           </View>
         </ScrollView>
       </LinearGradient>
@@ -256,39 +342,32 @@ const styles = StyleSheet.create({
   keyboardAvoidingContainer: {
     flex: 1
   },
-
   fullScreen: {
     flex: 1
   },
-
   scrollView: {
     flex: 1
   },
-
   container: {
     flexGrow: 1,
     justifyContent: "center",
     paddingHorizontal: 20,
     paddingVertical: 40
   },
-
   header_container: {
     paddingBottom: 20,
     width: "100%"
   },
-
   backButton: {
     flexDirection: "row",
     alignItems: "center",
     alignSelf: "flex-start"
   },
-
   backText: {
     color: "#FFFFFF",
     fontSize: 20,
     marginLeft: 8
   },
-
   form_container: {
     backgroundColor: "white",
     borderRadius: 20,
@@ -304,12 +383,10 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 8
   },
-
   title_container: {
     alignItems: "center",
     marginBottom: 30
   },
-
   iconContainer: {
     width: 80,
     height: 80,
@@ -326,7 +403,6 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 8
   },
-
   title: {
     fontSize: 24,
     color: "#333",
@@ -334,35 +410,110 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     marginBottom: 10
   },
-
   subtitle: {
     fontSize: 14,
     textAlign: "center",
     color: "#666",
     lineHeight: 20
   },
-
+  currentAllergiesSection: {
+    width: "100%",
+    marginBottom: 30,
+    backgroundColor: "#f8f9fa",
+    borderRadius: 15,
+    padding: 20
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 15
+  },
+  sectionTitle: {
+    fontSize: 16,
+    marginBottom: 10,
+    fontWeight: "600",
+    color: "#333"
+  },
+  clearAllButton: {
+    backgroundColor: "#fff",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: "#dc3545"
+  },
+  clearAllText: {
+    color: "#dc3545",
+    fontSize: 12,
+    fontWeight: "600"
+  },
+  currentAllergiesList: {
+    gap: 10
+  },
+  currentAllergyItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    padding: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#e9ecef"
+  },
+  currentAllergyIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "rgba(138, 66, 255, 0.1)",
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 12
+  },
+  currentAllergyText: {
+    flex: 1,
+    fontSize: 16,
+    color: "#333",
+    fontWeight: "500"
+  },
+  customBadge: {
+    backgroundColor: "#E5D1FF",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 10
+  },
+  customBadgeText: {
+    fontSize: 10,
+    color: "#8a42ffff",
+    fontWeight: "600"
+  },
+  noAllergiesContainer: {
+    alignItems: "center",
+    marginBottom: 30
+  },
+  noAllergiesText: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#28a745",
+    marginTop: 15,
+    textAlign: "center"
+  },
+  noAllergiesSubtext: {
+    fontSize: 14,
+    color: "#666",
+    textAlign: "center",
+    marginTop: 5
+  },
   allergiesSection: {
     width: "100%",
     marginBottom: 30
   },
-
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#333",
-    marginBottom: 15
-  },
-
   allergiesGrid: {
     width: "100%"
   },
-
   row: {
     justifyContent: "space-between",
     marginBottom: 15
   },
-
   allergyCard: {
     width: "30%",
     aspectRatio: 1,
@@ -374,12 +525,10 @@ const styles = StyleSheet.create({
     borderColor: "transparent",
     padding: 8
   },
-
   allergyCardSelected: {
     backgroundColor: "#E5D1FF",
     borderColor: "#8a42ffff"
   },
-
   allergyIcon: {
     width: 40,
     height: 40,
@@ -389,38 +538,31 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 8
   },
-
   allergyIconSelected: {
     backgroundColor: "#8a42ffff"
   },
-
   allergyText: {
     fontSize: 12,
     color: "#333",
     textAlign: "center",
     fontWeight: "500"
   },
-
   allergyTextSelected: {
     color: "#8a42ffff",
     fontWeight: "600"
   },
-
   customSection: {
     width: "100%",
     marginBottom: 20
   },
-
   customInputContainer: {
     flexDirection: "row",
     alignItems: "center",
     gap: 10
   },
-
   input_container: {
     flex: 1
   },
-
   input: {
     backgroundColor: "#f8f9fa",
     borderWidth: 1,
@@ -431,11 +573,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#333"
   },
-
   addButtonContainer: {
     borderRadius: 12
   },
-
   addButton: {
     width: 48,
     height: 48,
@@ -451,25 +591,21 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 4
   },
-
   customAllergiesContainer: {
     marginTop: 15,
     width: "100%"
   },
-
   customAllergiesTitle: {
     fontSize: 14,
     fontWeight: "500",
     color: "#666",
     marginBottom: 10
   },
-
   customAllergiesList: {
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 8
   },
-
   customAllergyTag: {
     flexDirection: "row",
     alignItems: "center",
@@ -480,18 +616,15 @@ const styles = StyleSheet.create({
     marginRight: 8,
     marginBottom: 8
   },
-
   customAllergyText: {
     fontSize: 14,
     color: "#8a42ffff",
     fontWeight: "500"
   },
-
   removeButton: {
     marginLeft: 8,
     padding: 2
   },
-
   selectedContainer: {
     backgroundColor: "#f0f8ff",
     borderRadius: 10,
@@ -499,20 +632,20 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     width: "100%"
   },
-
   selectedText: {
     fontSize: 14,
     color: "#8a42ffff",
     textAlign: "center",
     fontWeight: "500"
   },
-
   continue_button: {
     borderRadius: 12,
     width: "100%",
     marginBottom: 15
   },
-
+  buttonDisabled: {
+    opacity: 0.6
+  },
   continue_button_gradient: {
     paddingVertical: 16,
     paddingHorizontal: 24,
@@ -527,39 +660,25 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 8
   },
-
   continue_button_text: {
     color: "white",
     fontSize: 18,
     fontWeight: "600"
   },
-
-  skipText: {
-    color: "#666",
-    fontSize: 14,
-    textAlign: "center"
-  },
-
-  skipLink: {
-    color: "#4278ffff",
-    fontWeight: "600"
-  },
-
   errorText: {
     color: "#dc3545",
     textAlign: "center",
     fontSize: 14,
     fontWeight: "600",
-    marginTop: 10,
+    marginBottom: 10,
     paddingHorizontal: 10
   },
-
   successText: {
     color: "#28a745",
     textAlign: "center",
     fontSize: 14,
     fontWeight: "600",
-    marginTop: 10,
+    marginBottom: 10,
     paddingHorizontal: 10
   }
 });
