@@ -4,11 +4,16 @@ export default function ProfileLayout() {
   return (
     <Stack
       screenOptions={{
-        headerShadowVisible: false,
         headerTitleAlign: "center",
         headerTitleStyle: { fontFamily: "Satoshi-Bold" }
       }}
     >
+      <Stack.Screen
+        name="subscription"
+        options={{
+          headerTitle: "Subscription Plans"
+        }}
+      />
       <Stack.Screen
         name="allergens"
         options={{
