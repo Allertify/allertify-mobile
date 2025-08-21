@@ -41,8 +41,8 @@ const settings = [
   },
   {
     href: "/profile/emergency-contacts",
-    label: "Emergency Contacts",
-    description: "Manage your emergency contacts",
+    label: "Emergency Contact",
+    description: "Manage your Emergency Contact",
     icon: "call",
     colors: ["#e74c3cff", "#f39c12ff", "#e67e22ff"]
   },

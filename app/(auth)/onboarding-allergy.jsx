@@ -12,7 +12,7 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { LinearGradient } from "expo-linear-gradient";
-import { useSettings } from "@/hooks/useSettings";
+import { useSettings } from "@/hooks/useAllergies";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function onboardingAllergyScreen() {
