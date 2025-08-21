@@ -85,7 +85,7 @@ export default function SignUpScreen() {
 
         // Navigate to OTP screen after a brief delay
         setTimeout(() => {
-          router.push({
+          router.replace({
             pathname: "/otp",
             params: {
               email: formData.email,
@@ -420,7 +420,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 14,
     fontWeight: "600",
-    marginTop: 10,
+    marginVertical: 10,
     paddingHorizontal: 10
   },
 
@@ -429,7 +429,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 14,
     fontWeight: "600",
-    marginTop: 10,
+    marginVertical: 10,
     paddingHorizontal: 10
   }
 });

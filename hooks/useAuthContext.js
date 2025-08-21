@@ -20,9 +20,7 @@ export const useAuthContext = () => {
  */
 export const AuthProvider = ({ children }) => {
   const auth = useAuth();
-  const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isInitializing, setIsInitializing] = useState(true);
 
   // Store registration data temporarily for resend functionality
   const [registrationData, setRegistrationData] = useState(null);
@@ -35,18 +33,14 @@ export const AuthProvider = ({ children }) => {
     try {
       const authStatus = await auth.checkAuthStatus();
       setIsAuthenticated(authStatus.isAuthenticated);
-      setUser(authStatus.user);
     } catch (error) {
       console.error("Error checking initial auth state:", error);
-    } finally {
-      setIsInitializing(false);
     }
   };
 
   const handleLogin = async (credentials) => {
     const result = await auth.login(credentials);
     if (result.success) {
-      setUser(result.data.user);
       setIsAuthenticated(true);
     }
     return result;
@@ -62,7 +56,6 @@ export const AuthProvider = ({ children }) => {
   const handleVerifyOTP = async (otpData) => {
     const result = await auth.verifyOTP(otpData);
     if (result.success) {
-      setUser(result.data.user);
       setIsAuthenticated(true);
       setRegistrationData(null);
     }
@@ -86,7 +79,6 @@ export const AuthProvider = ({ children }) => {
   const handleLogout = async () => {
     const result = await auth.logout();
     if (result.success) {
-      setUser(null);
       setIsAuthenticated(false);
       setRegistrationData(null);
     }
@@ -95,9 +87,7 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     // Authentication state
-    user,
     isAuthenticated,
-    isInitializing,
 
     // Loading states from useAuth
     isLoading: auth.isLoading,

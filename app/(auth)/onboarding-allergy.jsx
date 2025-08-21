@@ -12,13 +12,19 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { LinearGradient } from "expo-linear-gradient";
+import { useSettings } from "@/hooks/useSettings";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-export default function AllergyOnboardingScreen() {
+export default function onboardingAllergyScreen() {
   const router = useRouter();
+
+  const { updateAllergies, clearError, error } = useSettings();
   const [selectedAllergies, setSelectedAllergies] = useState([]);
   const [customAllergy, setCustomAllergy] = useState("");
   const [customAllergiesList, setCustomAllergiesList] = useState([]);
+
+  const [localError, setLocalError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const commonAllergies = [
     { id: "peanuts", name: "Peanuts", icon: "nutrition" },
@@ -56,10 +62,31 @@ export default function AllergyOnboardingScreen() {
     setSelectedAllergies((prev) => prev.filter((id) => id !== `custom_${allergy}`));
   }
 
-  function handleContinue() {
+  async function handleSendAllergy() {
+    setLocalError("");
+    setSuccessMessage("");
+    clearError();
+
     const allAllergies = [...selectedAllergies.filter((id) => !id.startsWith("custom_")), ...customAllergiesList];
-    console.log("Selected allergies:", allAllergies);
-    router.push("/");
+
+    try {
+      const result = await updateAllergies(allAllergies);
+
+      if (result.success) {
+        setSuccessMessage("Successfully updated allergies!");
+
+        setTimeout(() => {
+          router.replace({
+            pathname: "/"
+          });
+        }, 1500);
+      } else {
+        setLocalError(result.error || "Allergies update failed. Please try again.");
+      }
+    } catch (err) {
+      setLocalError("An unexpected error occurred. Please try again.");
+      console.error("Registration error:", err);
+    }
   }
 
   function renderAllergyCard({ item }) {
@@ -88,6 +115,8 @@ export default function AllergyOnboardingScreen() {
       </View>
     );
   }
+
+  const displayError = localError || error;
 
   return (
     <KeyboardAvoidingView
@@ -196,8 +225,11 @@ export default function AllergyOnboardingScreen() {
               </View>
             )}
 
+            {displayError ? <ThemedText style={styles.errorText}>{displayError}</ThemedText> : null}
+            {successMessage ? <ThemedText style={styles.successText}>{successMessage}</ThemedText> : null}
+
             {/* Continue Button */}
-            <Pressable style={styles.continue_button} onPress={handleContinue}>
+            <Pressable style={styles.continue_button} onPress={handleSendAllergy}>
               <LinearGradient
                 colors={["#fff5aaff", "#42e895ff", "#4284ffff"]}
                 style={styles.continue_button_gradient}
@@ -511,5 +543,23 @@ const styles = StyleSheet.create({
   skipLink: {
     color: "#4278ffff",
     fontWeight: "600"
+  },
+
+  errorText: {
+    color: "#dc3545",
+    textAlign: "center",
+    fontSize: 14,
+    fontWeight: "600",
+    marginTop: 10,
+    paddingHorizontal: 10
+  },
+
+  successText: {
+    color: "#28a745",
+    textAlign: "center",
+    fontSize: 14,
+    fontWeight: "600",
+    marginTop: 10,
+    paddingHorizontal: 10
   }
 });

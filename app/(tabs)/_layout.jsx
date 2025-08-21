@@ -8,6 +8,7 @@ export default function TabsLayout() {
     <AuthProvider>
       <Tabs
         screenOptions={{
+          headerShown: false,
           headerTitleAlign: "center",
           headerTitleStyle: {
             fontFamily: "Satoshi-Bold"

@@ -105,7 +105,7 @@ export default function OTPScreen() {
         setSuccessMessage("Verification successful! Welcome aboard!");
 
         setTimeout(() => {
-          router.replace("/onboarding");
+          router.replace("/onboardingAllergy");
         }, 1500);
       } else {
         setErrorMessage(result.error || "Invalid OTP. Please try again.");

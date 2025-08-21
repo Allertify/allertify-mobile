@@ -21,7 +21,7 @@ export function useToken() {
     };
 
     fetchToken();
-  }, [getStoredUser]);
+  }, []);
 
   return { token, isLoading };
 }
