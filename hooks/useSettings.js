@@ -1,126 +1,131 @@
-import { useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useToken } from "./useToken";
+import { useSettingsAPI } from "./useSettingsAPI";
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
+// Global state to keep allergies synchronized across all instances
+let globalAllergies = [];
+let globalListeners = [];
+
+const notifyListeners = (newAllergies) => {
+  globalAllergies = newAllergies;
+  globalListeners.forEach((listener) => listener(newAllergies));
+};
 
 export const useSettings = () => {
-  const [allergies, setAllergies] = useState([]);
-  const [error, setError] = useState(null);
+  const { token, isLoading: tokenLoading } = useToken();
+  const {
+    fetchAllergies,
+    updateAllergies,
+    getStoredAllergies,
+    isLoading: apiLoading,
+    error,
+    clearError
+  } = useSettingsAPI();
+
+  const [allergies, setAllergies] = useState(globalAllergies);
   const [isLoading, setIsLoading] = useState(false);
-  const { token } = useToken();
+  const [hasInitialized, setHasInitialized] = useState(false);
 
-  // Add a simple in-memory cache to prevent duplicate requests
-  let getAllergiesCache = null;
-  let cacheTimestamp = null;
-  const CACHE_DURATION = 60000; // 1 minute cache
+  // Register this component instance as a listener
+  useEffect(() => {
+    const listener = (newAllergies) => {
+      setAllergies(newAllergies);
+    };
 
-  const getAllergies = async () => {
-    // Check cache first
-    if (getAllergiesCache && cacheTimestamp && Date.now() - cacheTimestamp < CACHE_DURATION) {
-      return getAllergiesCache;
-    }
+    globalListeners.push(listener);
 
-    // Prevent multiple simultaneous requests
-    if (isLoading) {
-      return allergies;
-    }
+    // Cleanup on unmount
+    return () => {
+      globalListeners = globalListeners.filter((l) => l !== listener);
+    };
+  }, []);
 
-    setIsLoading(true);
+  const getAllergies = useCallback(
+    async (forceRefresh = false) => {
+      if (isLoading && !forceRefresh) {
+        return allergies;
+      }
 
-    try {
-      const result = await fetch(`${API_BASE_URL}/users/me/allergies`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
+      setIsLoading(true);
+      try {
+        if (!token) {
+          // If no token, try to get stored allergies
+          const stored = await getStoredAllergies();
+          notifyListeners(stored);
+          return stored;
         }
-      });
 
-      if (result.status === 429) {
-        throw new Error("Too many requests. Please wait a moment and try again.");
+        const result = await fetchAllergies(token);
+        if (result.success) {
+          notifyListeners(result.data);
+          return result.data;
+        } else {
+          // If API fails, fall back to stored allergies
+          const stored = await getStoredAllergies();
+          notifyListeners(stored);
+          return stored;
+        }
+      } catch (error) {
+        console.error("Error in getAllergies:", error);
+        // Fall back to stored allergies
+        const stored = await getStoredAllergies();
+        notifyListeners(stored);
+        return stored;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [token, isLoading, fetchAllergies, getStoredAllergies]
+  );
+
+  const handleUpdateAllergies = useCallback(
+    async (allergiesList) => {
+      if (!token) {
+        throw new Error("No authentication token available");
       }
 
-      if (!result.ok) {
-        throw new Error(`HTTP error! status: ${result.status}`);
+      const result = await updateAllergies(token, allergiesList);
+      if (result.success) {
+        // Update global state immediately
+        notifyListeners(result.data);
+      }
+      return result;
+    },
+    [token, updateAllergies]
+  );
+
+  // Initialize allergies on first load
+  useEffect(() => {
+    const initializeAllergies = async () => {
+      if (hasInitialized) return;
+
+      // First load from cache immediately
+      const stored = await getStoredAllergies();
+      if (stored.length > 0) {
+        notifyListeners(stored);
       }
 
-      const data = await result.json();
+      setHasInitialized(true);
 
-      if (data?.allergies) {
-        setAllergies(data.allergies);
-        getAllergiesCache = data.allergies;
-        cacheTimestamp = Date.now();
-        return data.allergies;
+      // Then fetch from API if we have a token
+      if (token && !tokenLoading) {
+        getAllergies(true);
       }
+    };
 
-      setAllergies([]);
-      getAllergiesCache = [];
-      cacheTimestamp = Date.now();
-      return [];
-    } catch (error) {
-      console.error("Error while getting allergies", error);
-      setError(error.message);
-      return allergies; // Return current state instead of empty array
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    initializeAllergies();
+  }, [token, tokenLoading, hasInitialized, getAllergies, getStoredAllergies]);
 
-  const updateAllergies = async (allergiesList) => {
-    setIsLoading(true);
-
-    try {
-      const result = await fetch(`${API_BASE_URL}/users/me/allergies`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          allergies: allergiesList
-        })
-      });
-
-      if (result.status === 429) {
-        throw new Error("Too many requests. Please wait a moment and try again.");
-      }
-
-      if (!result.ok) {
-        throw new Error(`HTTP error! status: ${result.status}`);
-      }
-
-      const data = await result.json();
-
-      if (!data?.success) {
-        throw new Error(data.message || "Update allergies failed.");
-      }
-
-      setAllergies(allergiesList);
-
-      // Clear cache after successful update
-      getAllergiesCache = allergiesList;
-      cacheTimestamp = Date.now();
-
-      return { success: true, allergies: allergiesList };
-    } catch (error) {
-      console.error("Error while updating allergies", error);
-      setError(error.message);
-      return { success: false, error: error.message };
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const clearError = () => setError(null);
+  useEffect(() => {
+    console.log("Allergies state updated:", allergies);
+  }, [allergies]);
 
   return {
     allergies,
     error,
-    isLoading,
-
-    // methods
+    isLoading: isLoading || apiLoading,
     getAllergies,
-    updateAllergies,
+    updateAllergies: handleUpdateAllergies,
     clearError
   };
 };
