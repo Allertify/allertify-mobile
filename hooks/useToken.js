@@ -3,6 +3,7 @@ import { useAuth } from "./useAuth";
 
 export function useToken() {
   const { getStoredUser } = useAuth();
+  const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -13,8 +14,11 @@ export function useToken() {
         if (storedUser?.token) {
           setToken(storedUser.token);
         }
+        if (storedUser?.user) {
+          setUser(storedUser.user);
+        }
       } catch (error) {
-        console.error("Error fetching token:", error);
+        console.error("Error fetching token/user:", error);
       } finally {
         setIsLoading(false);
       }
@@ -23,5 +27,5 @@ export function useToken() {
     fetchToken();
   }, [getStoredUser]);
 
-  return { token, isLoading };
+  return { user, token, isLoading };
 }

@@ -8,7 +8,7 @@ import { useHistory } from "@/hooks/useHistory";
 import { useToken } from "@/hooks/useToken";
 
 export default function HomeScreen() {
-  const { token, isLoading: tokenLoading } = useToken();
+  const { user, token, isLoading: tokenLoading } = useToken();
   const { data: historyData, isLoading: historyLoading } = useHistory(token);
 
   if (tokenLoading || historyLoading) {
@@ -25,7 +25,7 @@ export default function HomeScreen() {
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <ThemedText style={styles.greeting}>👋 Hey, John Doe!</ThemedText>
+      <ThemedText style={styles.greeting}>👋 Hey, {user.full_name}</ThemedText>
 
       <ThemedLink label="Recent Scans" href="/profile/history" />
       <HorizontalList itemCount={recentScans.length} type="history" scans={recentScans} />
