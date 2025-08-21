@@ -3,10 +3,18 @@ import { LinearGradient } from "expo-linear-gradient";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { useRouter } from "expo-router";
 import { useUser } from "@/hooks/useUser";
+import { useSubscription } from "@/hooks/useSubscription";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useAuth } from "@/hooks/useAuth";
 
 const account = [
+  {
+    href: "/profile/subscriptions",
+    label: "Subscriptions",
+    description: "Manage your subscriptions",
+    icon: "heart",
+    colors: ["#ff6b6bff", "#ffa500ff", "#ff1744ff"]
+  },
   {
     href: "/profile/history",
     label: "History",
@@ -81,6 +89,7 @@ function ProfileCard({ item, onPress }) {
 export default function ProfileScreen() {
   const router = useRouter();
   const { user } = useUser();
+  const { data: subscriptionData, isLoading: subscriptionLoading } = useSubscription();
   const { logout, isLoading } = useAuth();
 
   const handlePressLogout = () => {
@@ -137,6 +146,36 @@ export default function ProfileScreen() {
               <View style={styles.userInfo}>
                 <ThemedText style={styles.userName}>{user.full_name || user.name}</ThemedText>
                 <ThemedText style={styles.userEmail}>{user.email}</ThemedText>
+                {subscriptionLoading ? (
+                  <View style={styles.subscriptionInfo}>
+                    <ThemedText style={styles.loadingText}>Loading subscription...</ThemedText>
+                  </View>
+                ) : subscriptionData ? (
+                  <View style={styles.subscriptionInfo}>
+                    <View style={styles.subscriptionBadge}>
+                      <Ionicons
+                        name={subscriptionData.is_free_tier ? "card-outline" : "diamond-outline"}
+                        size={16}
+                        color={subscriptionData.is_free_tier ? "#333" : "#B8860B"}
+                      />
+                      <ThemedText
+                        style={[styles.subscriptionText, { color: subscriptionData.is_free_tier ? "#333" : "#B8860B" }]}
+                      >
+                        {subscriptionData.subscription?.tier_plan?.plan_type || "FREE"}
+                      </ThemedText>
+                    </View>
+                    {subscriptionData.subscription?.status && (
+                      <View
+                        style={[
+                          styles.statusBadge,
+                          { backgroundColor: subscriptionData.subscription.status === "ACTIVE" ? "#4CAF50" : "#FF9800" }
+                        ]}
+                      >
+                        <ThemedText style={styles.statusText}>{subscriptionData.subscription.status}</ThemedText>
+                      </View>
+                    )}
+                  </View>
+                ) : null}
               </View>
             </View>
           )}
@@ -253,6 +292,42 @@ const styles = StyleSheet.create({
   userEmail: {
     fontSize: 16,
     color: "#666"
+  },
+  subscriptionInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 8,
+    gap: 8
+  },
+  subscriptionBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f8f9fa",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#e9ecef"
+  },
+  subscriptionText: {
+    fontSize: 12,
+    fontWeight: "600",
+    marginLeft: 4
+  },
+  statusBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12
+  },
+  statusText: {
+    fontSize: 10,
+    fontWeight: "600",
+    color: "white"
+  },
+  loadingText: {
+    fontSize: 12,
+    color: "#999",
+    fontStyle: "italic"
   },
   section: {
     marginBottom: 30
