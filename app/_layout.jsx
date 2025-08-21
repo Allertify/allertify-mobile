@@ -8,8 +8,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 60 * 5,
-      gcTime: 60 * 10
+      staleTime: 0,
+      gcTime: 0
     }
   }
 });
@@ -40,6 +40,17 @@ export default function RootLayout() {
             name="product/[productId]"
             options={{
               headerTitle: "Product Details",
+              headerTitleAlign: "center",
+              headerTitleStyle: {
+                fontFamily: "Satoshi-Bold"
+              },
+              headerShadowVisible: false
+            }}
+          />
+          <Stack.Screen
+            name="scan/[scanId]"
+            options={{
+              headerTitle: "Scan Details",
               headerTitleAlign: "center",
               headerTitleStyle: {
                 fontFamily: "Satoshi-Bold"

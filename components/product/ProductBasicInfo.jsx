@@ -13,7 +13,7 @@ export function ProductBasicInfo({ product }) {
 
 const styles = StyleSheet.create({
   section: {
-    marginBottom: 32
+    marginBottom: 16
   },
   productName: {
     fontSize: 24,

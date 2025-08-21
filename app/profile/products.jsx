@@ -2,12 +2,12 @@ import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
 
 import { HorizontalList } from "@/components/lists/HorizontalList";
 import { ThemedText } from "@/components/ui/ThemedText";
-import { useSavedProducts } from "@/hooks/useSavedProducts";
+import { useSavedScans } from "@/hooks/useSavedScans";
 import { useToken } from "@/hooks/useToken";
 
 export default function ProductsScreen() {
   const { token, isLoading: tokenLoading } = useToken();
-  const { data: savedProducts, isLoading: savedProductsLoading } = useSavedProducts(token);
+  const { data: savedProducts, isLoading: savedProductsLoading } = useSavedScans(token);
 
   if (tokenLoading || savedProductsLoading) {
     return (

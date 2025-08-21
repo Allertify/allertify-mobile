@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-async function fetchSavedProducts(token) {
+async function fetchSavedScans(token) {
   const response = await fetch(`${process.env.EXPO_PUBLIC_API_BASE_URL}/scans/saved`, {
     method: "GET",
     headers: {
@@ -17,10 +17,10 @@ async function fetchSavedProducts(token) {
   return json.data;
 }
 
-export function useSavedProducts(token) {
+export function useSavedScans(token) {
   return useQuery({
-    queryKey: ["savedProducts"],
-    queryFn: () => fetchSavedProducts(token),
+    queryKey: ["savedScans"],
+    queryFn: () => fetchSavedScans(token),
     enabled: !!token
   });
 }
