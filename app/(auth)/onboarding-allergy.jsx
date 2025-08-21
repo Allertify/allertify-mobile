@@ -76,8 +76,8 @@ export default function onboardingAllergyScreen() {
         setSuccessMessage("Successfully updated allergies!");
 
         setTimeout(() => {
-          router.replace({
-            pathname: "/"
+          router.push({
+            pathname: "/onboarding-emergency"
           });
         }, 1500);
       } else {
