@@ -40,9 +40,9 @@ const settings = [
     colors: ["#ff6b6bff", "#ffa500ff", "#ff1744ff"]
   },
   {
-    href: "/profile/emergency-contacts",
-    label: "Emergency Contacts",
-    description: "Manage your emergency contacts",
+    href: "/profile/emergency-contact",
+    label: "Emergency Contact",
+    description: "Manage your Emergency Contact",
     icon: "call",
     colors: ["#e74c3cff", "#f39c12ff", "#e67e22ff"]
   },
@@ -144,7 +144,7 @@ export default function ProfileScreen() {
                 </LinearGradient>
               </View>
               <View style={styles.userInfo}>
-                <ThemedText style={styles.userName}>{user.full_name || user.name}</ThemedText>
+                <ThemedText style={styles.userName}>{user.fullName}</ThemedText>
                 <ThemedText style={styles.userEmail}>{user.email}</ThemedText>
                 {subscriptionLoading ? (
                   <View style={styles.subscriptionInfo}>

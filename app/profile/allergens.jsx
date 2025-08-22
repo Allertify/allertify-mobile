@@ -9,13 +9,11 @@ import {
   FlatList,
   Alert
 } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect } from "react";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { LinearGradient } from "expo-linear-gradient";
-import { useSettings } from "@/hooks/useSettings";
-import { useToken } from "@/hooks/useToken";
+import { useSettings } from "@/hooks/useAllergies";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function AllergensScreen() {

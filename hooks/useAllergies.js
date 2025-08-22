@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useToken } from "./useToken";
-import { useSettingsAPI } from "./useSettingsAPI";
+import { useSettingsAPI } from "./useAllergiesAPI";
 
 // Global state to keep allergies synchronized across all instances
 let globalAllergies = [];

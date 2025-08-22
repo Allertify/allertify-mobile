@@ -12,7 +12,7 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { LinearGradient } from "expo-linear-gradient";
-import { useSettings } from "@/hooks/useSettings";
+import { useSettings } from "@/hooks/useAllergies";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function onboardingAllergyScreen() {
@@ -76,8 +76,8 @@ export default function onboardingAllergyScreen() {
         setSuccessMessage("Successfully updated allergies!");
 
         setTimeout(() => {
-          router.replace({
-            pathname: "/"
+          router.push({
+            pathname: "/onboarding-emergency"
           });
         }, 1500);
       } else {
@@ -550,7 +550,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 14,
     fontWeight: "600",
-    marginTop: 10,
+    marginBottom: 10,
     paddingHorizontal: 10
   },
 
@@ -559,7 +559,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 14,
     fontWeight: "600",
-    marginTop: 10,
+    marginBottom: 10,
     paddingHorizontal: 10
   }
 });
