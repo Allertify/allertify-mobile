@@ -24,9 +24,8 @@ export function useSaveScan(scanId, token) {
     mutationFn: () => saveScan(scanId, token),
     onSuccess: async (data) => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["savedProducts"] }),
-        queryClient.invalidateQueries({ queryKey: ["history"] }),
-        queryClient.invalidateQueries({ queryKey: ["savedScans"] })
+        queryClient.invalidateQueries({ queryKey: ["savedScans"] }),
+        queryClient.invalidateQueries({ queryKey: ["history"] })
       ]);
       return data;
     }

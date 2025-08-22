@@ -29,8 +29,9 @@ export function useSaveProduct(productId, listType, token) {
     mutationFn: () => saveProduct(productId, listType, token),
     onSuccess: async (data) => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["savedProducts"] }),
-        queryClient.invalidateQueries({ queryKey: ["history"] })
+        queryClient.invalidateQueries({ queryKey: ["savedScans"] }),
+        queryClient.invalidateQueries({ queryKey: ["history"] }),
+        queryClient.invalidateQueries({ queryKey: ["product", productId] })
       ]);
       return data;
     }

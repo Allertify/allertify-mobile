@@ -24,8 +24,6 @@ export function useSubscriptionPlans() {
   return useQuery({
     queryKey: ["subscription-plans"],
     queryFn: () => fetchSubscriptionPlans(token),
-    enabled: !!token,
-    staleTime: 10 * 60 * 1000, // 10 minutes
-    cacheTime: 20 * 60 * 1000 // 20 minutes
+    enabled: !!token
   });
 }
