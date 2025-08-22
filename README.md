@@ -103,18 +103,24 @@ Using **barcode scanning, AI-powered allergy reasoning, and personalized profile
 - The application will not verify the accuracy of the user’s allergy profile or medical condition. The system relies entirely on self-reported information provided by the user.
 - There will be no support for SMS or WhatsApp based OTP, only Email will be supported. 
 
-## 🚀 Getting Started  
+## 🚀 Getting Started
 ```bash
-# Clone repository
+# 1. Clone repository
 git clone https://github.com/Allertify/allertify-mobile.git
-
-# Add api url to .env.local
-EXPO_PUBLIC_API_BASE_URL= <insert API URL here>
-
-# Install dependencies
 cd allertify
+
+# 2. Edit .env.local
+EXPO_PUBLIC_API_BASE_URL= https://allertify.ciet.site/api/v1
+
+# 3. Install dependencies
 npm install
 
-# Start mobile app
-npm run start
+# 4. Install Expo-Go di playstore
+
+# 5. Start mobile app
+npx expo start
+
+# 6. Switch to expo-go (click s di terminal)
+
+# 7. Scan barcode
 ```
