@@ -161,7 +161,8 @@ export default function ProfileScreen() {
                       <ThemedText
                         style={[styles.subscriptionText, { color: subscriptionData.is_free_tier ? "#333" : "#B8860B" }]}
                       >
-                        {subscriptionData.subscription?.tier_plan?.plan_type || "FREE"}
+                        {subscriptionData.subscription?.tier_plan?.plan_type?.charAt(0).toUpperCase() +
+                          subscriptionData.subscription?.tier_plan?.plan_type?.slice(1) || "FREE"}
                       </ThemedText>
                     </View>
                     {subscriptionData.subscription?.status && (

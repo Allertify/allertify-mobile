@@ -10,7 +10,7 @@ import { useState } from "react";
 import { ActivityIndicator, Alert, Modal, Pressable, ScrollView, StyleSheet, View } from "react-native";
 
 function PlanCard({ plan, isCurrentPlan, onSelect, isUpgrading }) {
-  const isFree = plan.plan_type === "FREE";
+  const isBasic = plan.plan_type === "basic";
 
   return (
     <Pressable
@@ -21,20 +21,22 @@ function PlanCard({ plan, isCurrentPlan, onSelect, isUpgrading }) {
       <View style={styles.planHeader}>
         <View style={styles.planIconContainer}>
           <LinearGradient
-            colors={isFree ? ["#E8F5E8", "#4CAF50"] : ["#FFF8E1", "#FFC107"]}
+            colors={isBasic ? ["#E8F5E8", "#4CAF50"] : ["#FFF8E1", "#FFC107"]}
             style={styles.planIcon}
             start={[0, 0]}
             end={[1, 1]}
           >
             <Ionicons
-              name={isFree ? "card-outline" : "diamond-outline"}
+              name={isBasic ? "card-outline" : "diamond-outline"}
               size={24}
-              color={isFree ? "#2E7D32" : "#B8860B"}
+              color={isBasic ? "#2E7D32" : "#B8860B"}
             />
           </LinearGradient>
         </View>
         <View style={styles.planInfo}>
-          <ThemedText style={styles.planName}>{plan.plan_type}</ThemedText>
+          <ThemedText style={styles.planName}>
+            {plan.plan_type.charAt(0).toUpperCase() + plan.plan_type.slice(1)}
+          </ThemedText>
           {isCurrentPlan && (
             <View style={styles.currentBadge}>
               <ThemedText style={styles.currentBadgeText}>Current Plan</ThemedText>
@@ -56,7 +58,7 @@ function PlanCard({ plan, isCurrentPlan, onSelect, isUpgrading }) {
 
       {!isCurrentPlan && (
         <View style={styles.actionContainer}>
-          <ThemedText style={styles.upgradeText}>{isFree ? "Upgrade to Premium" : "Switch Plan"}</ThemedText>
+          <ThemedText style={styles.upgradeText}>{isBasic ? "Upgrade to Premium" : "Switch to Basic"}</ThemedText>
         </View>
       )}
     </Pressable>
