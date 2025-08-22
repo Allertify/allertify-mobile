@@ -8,17 +8,35 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
 import { ActivityIndicator, Alert, Modal, Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { useRouter } from "expo-router";
 
 function PlanCard({ plan, isCurrentPlan, onSelect, isUpgrading }) {
   const isBasic = plan.plan_type === "basic";
+  const isFree = plan.plan_type === "FREE";
+  const isPremium = plan.plan_type === "PREMIUM";
+
+  const getCardColors = () => {
+    if (isFree) return ["#667eea", "#764ba2"];
+    if (isPremium) return ["#ffecd2", "#fcb69f", "#ff9a9e"];
+    return ["#aca0ffff", "#ffa0c4ff"];
+  };
+
+  const getIconName = () => {
+    if (isFree) return "card-outline";
+    if (isPremium) return "diamond";
+    return "star";
+  };
 
   return (
-    <Pressable
-      style={[styles.planCard, isCurrentPlan && styles.currentPlanCard, isUpgrading && styles.upgradingCard]}
-      onPress={onSelect}
-      disabled={isUpgrading}
-    >
-      <View style={styles.planHeader}>
+    <Pressable style={[styles.planCard, isUpgrading && styles.upgradingCard]} onPress={onSelect} disabled={isUpgrading}>
+      <LinearGradient colors={getCardColors()} style={styles.planCardGradient} start={[0, 0]} end={[1, 0.8]}>
+        {isCurrentPlan && (
+          <View style={styles.currentPlanBadge}>
+            <Ionicons name="checkmark-circle" size={16} color="#FFFFFF" />
+            <ThemedText style={styles.currentPlanText}>Current Plan</ThemedText>
+          </View>
+        )}
+
         <View style={styles.planIconContainer}>
           <LinearGradient
             colors={isBasic ? ["#E8F5E8", "#4CAF50"] : ["#FFF8E1", "#FFC107"]}
@@ -43,29 +61,43 @@ function PlanCard({ plan, isCurrentPlan, onSelect, isUpgrading }) {
             </View>
           )}
         </View>
-      </View>
+        <View style={styles.planFeatures}>
+          <View style={styles.feature}>
+            <Ionicons name="scan-outline" size={16} color="#666" />
+            <ThemedText style={styles.featureText}>{plan.scan_count_limit} scans per month</ThemedText>
+          </View>
+          <View style={styles.feature}>
+            <Ionicons name="bookmark-outline" size={16} color="#666" />
+            <ThemedText style={styles.featureText}>{plan.saved_product_limit} saved products</ThemedText>
+          </View>
+        </View>
 
-      <View style={styles.planFeatures}>
-        <View style={styles.feature}>
-          <Ionicons name="scan-outline" size={16} color="#666" />
-          <ThemedText style={styles.featureText}>{plan.scan_count_limit} scans per month</ThemedText>
-        </View>
-        <View style={styles.feature}>
-          <Ionicons name="bookmark-outline" size={16} color="#666" />
-          <ThemedText style={styles.featureText}>{plan.saved_product_limit} saved products</ThemedText>
-        </View>
-      </View>
-
-      {!isCurrentPlan && (
-        <View style={styles.actionContainer}>
-          <ThemedText style={styles.upgradeText}>{isBasic ? "Upgrade to Premium" : "Switch to Basic"}</ThemedText>
-        </View>
-      )}
+        {!isCurrentPlan && (
+          <View style={styles.actionContainer}>
+            <ThemedText style={styles.upgradeText}>{isBasic ? "Upgrade to Premium" : "Switch to Basic"}</ThemedText>
+          </View>
+        )}
+      </LinearGradient>
     </Pressable>
   );
 }
 
+function FeatureCard({ icon, title, description, colors }) {
+  return (
+    <View style={styles.featureCard}>
+      <LinearGradient colors={colors} style={styles.featureCardGradient} start={[0, 0]} end={[1, 1]}>
+        <View style={styles.featureIconContainer}>
+          <Ionicons name={icon} size={24} color="#FFFFFF" />
+        </View>
+        <ThemedText style={styles.featureTitle}>{title}</ThemedText>
+        <ThemedText style={styles.featureDescription}>{description}</ThemedText>
+      </LinearGradient>
+    </View>
+  );
+}
+
 export default function SubscriptionScreen() {
+  const router = useRouter();
   const { token, isLoading: tokenLoading } = useToken();
   const { data: plansData, isLoading: plansLoading, error: plansError, isError: plansIsError } = useSubscriptionPlans();
   const { data: currentSubscription, isLoading: subscriptionLoading } = useSubscription();
@@ -76,7 +108,7 @@ export default function SubscriptionScreen() {
   if (tokenLoading || plansLoading || subscriptionLoading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={Colors.blue} />
+        <ActivityIndicator size="large" color="#667eea" />
       </View>
     );
   }
@@ -84,6 +116,7 @@ export default function SubscriptionScreen() {
   if (plansIsError) {
     return (
       <View style={styles.errorContainer}>
+        <Ionicons name="alert-circle" size={64} color="#ff6b6b" />
         <ThemedText style={styles.errorText}>{plansError.message}</ThemedText>
       </View>
     );
@@ -92,6 +125,7 @@ export default function SubscriptionScreen() {
   if (!plansData) {
     return (
       <View style={styles.errorContainer}>
+        <Ionicons name="document-outline" size={64} color="#CBD5E0" />
         <ThemedText style={styles.errorText}>No subscription plans available</ThemedText>
       </View>
     );
@@ -134,48 +168,85 @@ export default function SubscriptionScreen() {
     return currentSubscription.subscription.tier_plan.plan_type === plan.plan_type;
   };
 
+  const features = [
+    {
+      icon: "shield-checkmark",
+      title: "Allergen Detection",
+      description: "Advanced scanning for allergen identification",
+      colors: ["#ff6b6b", "#ffa500"]
+    },
+    {
+      icon: "time",
+      title: "Product History",
+      description: "Track and save your scanned products",
+      colors: ["#2ed573", "#7bed9f"]
+    },
+    {
+      icon: "call",
+      title: "Emergency Contacts",
+      description: "Quick access to emergency contacts",
+      colors: ["#667eea", "#764ba2"]
+    },
+    {
+      icon: "person",
+      title: "Profile Management",
+      description: "Manage your allergen profiles easily",
+      colors: ["#adb1ffff", "#9fe8fcff"]
+    }
+  ];
+
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <View style={styles.container}>
+      {/* Header with back button */}
       <View style={styles.header}>
-        <ThemedText style={styles.description}>Choose the plan that best fits your needs</ThemedText>
-      </View>
-
-      <View style={styles.plansContainer}>
-        {plansData.plans.map((plan) => (
-          <PlanCard
-            key={plan.id}
-            plan={plan}
-            isCurrentPlan={isCurrentPlan(plan)}
-            onSelect={() => handlePlanSelect(plan)}
-            isUpgrading={isUpgrading}
-          />
-        ))}
-      </View>
-
-      <View style={styles.infoSection}>
-        <ThemedText style={styles.infoTitle}>What's included?</ThemedText>
-        <View style={styles.infoList}>
-          <View style={styles.infoItem}>
-            <Ionicons name="checkmark-circle" size={16} color="#4CAF50" />
-            <ThemedText style={styles.infoText}>Allergen detection</ThemedText>
-          </View>
-          <View style={styles.infoItem}>
-            <Ionicons name="checkmark-circle" size={16} color="#4CAF50" />
-            <ThemedText style={styles.infoText}>Product history and saved lists</ThemedText>
-          </View>
-          <View style={styles.infoItem}>
-            <Ionicons name="checkmark-circle" size={16} color="#4CAF50" />
-            <ThemedText style={styles.infoText}>Emergency contact management</ThemedText>
-          </View>
-          <View style={styles.infoItem}>
-            <Ionicons name="checkmark-circle" size={16} color="#4CAF50" />
-            <ThemedText style={styles.infoText}>Allergen profile management</ThemedText>
-          </View>
+        <Pressable style={styles.backButton} onPress={() => router.back()}>
+          <Ionicons name="arrow-back" size={24} color="#2D3748" />
+        </Pressable>
+        <View style={styles.headerContent}>
+          <ThemedText style={styles.headerTitle}>Subscription Plans</ThemedText>
+          <ThemedText style={styles.headerSubtitle}>Choose the plan that fits your needs</ThemedText>
         </View>
       </View>
 
-      <View style={styles.bottomSpacing} />
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        <View style={styles.content}>
+          {/* Plans Grid */}
+          <View style={styles.plansContainer}>
+            {plansData.plans.map((plan) => (
+              <PlanCard
+                key={plan.id}
+                plan={plan}
+                isCurrentPlan={isCurrentPlan(plan)}
+                onSelect={() => handlePlanSelect(plan)}
+                isUpgrading={isUpgrading}
+              />
+            ))}
+          </View>
 
+          {/* Features Section */}
+          <View style={styles.featuresSection}>
+            <View style={styles.sectionHeader}>
+              <Ionicons name="star" size={20} color="#2D3748" />
+              <ThemedText style={styles.sectionTitle}>What's Included</ThemedText>
+            </View>
+            <View style={styles.featuresGrid}>
+              {features.map((feature, index) => (
+                <FeatureCard
+                  key={index}
+                  icon={feature.icon}
+                  title={feature.title}
+                  description={feature.description}
+                  colors={feature.colors}
+                />
+              ))}
+            </View>
+          </View>
+
+          <View style={styles.bottomSpacing} />
+        </View>
+      </ScrollView>
+
+      {/* Duration Selection Modal */}
       <Modal
         visible={showDurationModal}
         transparent={true}
@@ -184,25 +255,39 @@ export default function SubscriptionScreen() {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
+            <LinearGradient colors={["#667eea", "#764ba2"]} style={styles.modalHeader} start={[0, 0]} end={[1, 0]}>
               <ThemedText style={styles.modalTitle}>Choose Duration</ThemedText>
               <ThemedText style={styles.modalSubtitle}>
-                Select how long you want to subscribe to {selectedPlan?.plan_type}
+                Select subscription length for {selectedPlan?.plan_type}
               </ThemedText>
-            </View>
+            </LinearGradient>
 
             <View style={styles.durationOptions}>
-              {[1, 3, 6, 12].map((months) => (
+              {[
+                { months: 1, label: "1 Month", badge: "" },
+                { months: 3, label: "3 Months", badge: "Save 10%" },
+                { months: 6, label: "6 Months", badge: "Save 20%" },
+                { months: 12, label: "12 Months", badge: "Save 30%" }
+              ].map((option) => (
                 <Pressable
-                  key={months}
+                  key={option.months}
                   style={styles.durationOption}
-                  onPress={() => handleUpgrade(months)}
+                  onPress={() => handleUpgrade(option.months)}
                   disabled={isUpgrading}
                 >
-                  <ThemedText style={styles.durationText}>
-                    {months} {months === 1 ? "Month" : "Months"}
-                  </ThemedText>
-                  {isUpgrading && <ActivityIndicator size="small" color={Colors.blue} />}
+                  <View style={styles.durationContent}>
+                    <ThemedText style={styles.durationText}>{option.label}</ThemedText>
+                    {option.badge && (
+                      <View style={styles.savingsBadge}>
+                        <ThemedText style={styles.savingsText}>{option.badge}</ThemedText>
+                      </View>
+                    )}
+                  </View>
+                  {isUpgrading ? (
+                    <ActivityIndicator size="small" color="#667eea" />
+                  ) : (
+                    <Ionicons name="chevron-forward" size={20} color="#999" />
+                  )}
                 </Pressable>
               ))}
             </View>
@@ -220,14 +305,15 @@ export default function SubscriptionScreen() {
           </View>
         </View>
       </Modal>
-    </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#F7ECFF",
-    flex: 1
+    flex: 1,
+    paddingTop: 25
   },
   loadingContainer: {
     flex: 1,
@@ -240,87 +326,111 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#F7ECFF",
-    padding: 24
+    padding: 24,
+    gap: 16
   },
   errorText: {
     fontSize: 16,
     color: "#666",
     textAlign: "center"
   },
+
+  // Header Styles
   header: {
-    padding: 24,
-    paddingBottom: 16
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: "#2746b7ff",
-    textAlign: "center",
-    marginBottom: 8
-  },
-  description: {
-    fontSize: 16,
-    color: "#666",
-    textAlign: "center"
-  },
-  plansContainer: {
-    paddingHorizontal: 24,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 16,
     gap: 16
   },
-  planCard: {
-    backgroundColor: "white",
-    borderRadius: 16,
-    padding: 20,
-    borderWidth: 1,
-    borderColor: "#e9ecef"
+  backButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "rgba(255,255,255,0.9)",
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 2
   },
-  currentPlanCard: {
-    borderWidth: 2,
-    borderColor: "#4CAF50"
+  headerContent: {
+    flex: 1
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: "700",
+    color: "#2D3748",
+    marginBottom: 4
+  },
+  headerSubtitle: {
+    fontSize: 14,
+    color: "#666"
+  },
+
+  scrollView: {
+    flex: 1
+  },
+  content: {
+    padding: 20
+  },
+
+  // Plans Styles
+  plansContainer: {
+    gap: 16,
+    marginBottom: 32
+  },
+  planCard: {
+    borderRadius: 20,
+    overflow: "hidden",
+    elevation: 8
+  },
+  planCardGradient: {
+    padding: 24,
+    minHeight: 180
   },
   upgradingCard: {
-    opacity: 0.6,
-    shadowOpacity: 0,
-    elevation: 0
+    opacity: 0.6
   },
-  planHeader: {
+  currentPlanBadge: {
+    position: "absolute",
+    top: 16,
+    right: 16,
     flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.2)",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    gap: 6
+  },
+  currentPlanText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#FFFFFF"
+  },
+  planIconContainer: {
     alignItems: "center",
     marginBottom: 16
   },
-  planIconContainer: {
-    marginRight: 16
-  },
-  planIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+  planIconWrapper: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: "rgba(255,255,255,0.2)",
     alignItems: "center",
     justifyContent: "center"
   },
-  planInfo: {
-    flex: 1
+  planContent: {
+    alignItems: "center",
+    gap: 12
   },
   planName: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: "700",
-    color: "#333",
-    marginBottom: 4
-  },
-  currentBadge: {
-    backgroundColor: "#4CAF50",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-    alignSelf: "flex-start"
-  },
-  currentBadgeText: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: "white"
+    color: "#FFFFFF"
   },
   planFeatures: {
-    gap: 12
+    gap: 8,
+    alignItems: "center"
   },
   feature: {
     flexDirection: "row",
@@ -329,108 +439,160 @@ const styles = StyleSheet.create({
   },
   featureText: {
     fontSize: 14,
-    color: "#666"
+    color: "rgba(255,255,255,0.9)",
+    fontWeight: "500"
   },
-  actionContainer: {
-    marginTop: 16,
-    paddingTop: 16,
-    borderTopWidth: 1,
-    borderTopColor: "#f0f0f0"
-  },
-  upgradeText: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#2746b7ff",
-    textAlign: "center"
-  },
-  infoSection: {
-    marginTop: 32,
-    paddingHorizontal: 24
-  },
-  infoTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#333",
-    marginBottom: 16,
-    textAlign: "center"
-  },
-  infoList: {
-    backgroundColor: "white",
-    borderRadius: 12,
-    padding: 20,
-    gap: 12
-  },
-  infoItem: {
+  upgradeButton: {
     flexDirection: "row",
     alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.2)",
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 24,
+    gap: 8,
+    marginTop: 8
+  },
+  upgradeButtonText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#FFFFFF"
+  },
+
+  // Features Section
+  featuresSection: {
+    marginBottom: 32
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 20
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#2D3748"
+  },
+  featuresGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 12
   },
-  infoText: {
+  featureCard: {
+    width: "48%",
+    borderRadius: 16,
+    overflow: "hidden",
+    elevation: 4
+  },
+  featureCardGradient: {
+    padding: 20,
+    alignItems: "center",
+    height: 200
+  },
+  featureIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: "rgba(255,255,255,0.2)",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 12
+  },
+  featureTitle: {
     fontSize: 14,
-    color: "#666"
+    fontWeight: "600",
+    color: "#FFFFFF",
+    textAlign: "center",
+    marginBottom: 4
   },
-  bottomSpacing: {
-    height: 100
+  featureDescription: {
+    fontSize: 12,
+    color: "rgba(255,255,255,0.8)",
+    textAlign: "center",
+    lineHeight: 16
   },
+
+  // Modal Styles
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
     justifyContent: "center",
     alignItems: "center"
   },
   modalContent: {
     backgroundColor: "white",
-    borderRadius: 20,
-    padding: 24,
+    borderRadius: 24,
     margin: 20,
     width: "90%",
-    maxWidth: 400
+    maxWidth: 400,
+    overflow: "hidden",
+    elevation: 20
   },
   modalHeader: {
-    marginBottom: 24
+    padding: 24,
+    alignItems: "center"
   },
   modalTitle: {
     fontSize: 24,
     fontWeight: "700",
-    color: "#333",
-    textAlign: "center",
+    color: "#FFFFFF",
     marginBottom: 8
   },
   modalSubtitle: {
-    fontSize: 16,
-    color: "#666",
+    fontSize: 14,
+    color: "rgba(255,255,255,0.9)",
     textAlign: "center"
   },
   durationOptions: {
-    gap: 12,
-    marginBottom: 24
+    padding: 24,
+    gap: 12
   },
   durationOption: {
     backgroundColor: "#f8f9fa",
-    borderRadius: 12,
-    padding: 16,
+    borderRadius: 16,
+    padding: 20,
     borderWidth: 1,
     borderColor: "#e9ecef",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center"
   },
+  durationContent: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between"
+  },
   durationText: {
     fontSize: 16,
     fontWeight: "600",
     color: "#333"
   },
+  savingsBadge: {
+    backgroundColor: "#2ed573",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8
+  },
+  savingsText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#FFFFFF"
+  },
   cancelButton: {
     backgroundColor: "#fff",
-    borderWidth: 2,
-    borderColor: "#dc3545",
-    borderRadius: 12,
-    paddingVertical: 16
+    borderTopWidth: 1,
+    borderTopColor: "#f0f0f0",
+    paddingVertical: 20
   },
   cancelButtonText: {
     color: "#dc3545",
     fontSize: 16,
     fontWeight: "600",
     textAlign: "center"
+  },
+
+  bottomSpacing: {
+    height: 100
   }
 });
