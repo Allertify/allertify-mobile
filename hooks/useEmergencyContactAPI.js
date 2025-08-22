@@ -217,14 +217,6 @@ export const useEmergencyContactAPI = () => {
     }
   };
 
-  const clearStoredEmergencyContact = async () => {
-    try {
-      await AsyncStorage.removeItem("userEmergencyContact");
-    } catch (error) {
-      console.error("Error clearing stored emergency contact:", error);
-    }
-  };
-
   const clearError = () => setError(null);
 
   return {
@@ -235,7 +227,6 @@ export const useEmergencyContactAPI = () => {
     deleteEmergencyContact,
     getStoredEmergencyContact,
     updateStoredEmergencyContact,
-    clearStoredEmergencyContact,
 
     // Loading and error states
     isLoading,

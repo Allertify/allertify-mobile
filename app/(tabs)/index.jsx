@@ -6,7 +6,7 @@ import { Colors } from "@/constants/Colors";
 import { useHistory } from "@/hooks/useHistory";
 import { useToken } from "@/hooks/useToken";
 import { useUser } from "@/hooks/useUser";
-import { useSettings } from "@/hooks/useAllergies";
+import { useAllergies } from "@/hooks/useAllergies";
 import { useEmergencyContact } from "@/hooks/useEmergencyContact";
 import { LinearGradient } from "expo-linear-gradient";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -16,7 +16,7 @@ export default function HomeScreen() {
   const router = useRouter();
   const { token, isLoading: tokenLoading } = useToken();
   const { user } = useUser();
-  const { allergies, isLoading: allergiesLoading } = useSettings();
+  const { allergies, isLoading: allergiesLoading } = useAllergies();
   const { data: historyData, isLoading: historyLoading } = useHistory(token);
   const { emergencyContact, hasEmergencyContact } = useEmergencyContact();
 
@@ -71,9 +71,8 @@ export default function HomeScreen() {
   const redFoodList = historyData?.scans?.filter((scan) => scan.listType === "RED") || [];
   const greenFoodList = historyData?.scans?.filter((scan) => scan.listType === "GREEN") || [];
 
-  // Format allergies for display
   const allergiesDisplay =
-    allergies && allergies.length > 0 ? `Allergies: ${allergies.join(", ")}` : "No allergies recorded";
+    allergies && allergies.length > 0 ? `Allergies: ${allergies.filter(Boolean).join(", ")}` : "No allergies recorded";
 
   return (
     <View style={styles.screenContainer}>

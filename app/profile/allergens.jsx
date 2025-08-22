@@ -13,12 +13,12 @@ import { useRouter } from "expo-router";
 import { useState, useEffect } from "react";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { LinearGradient } from "expo-linear-gradient";
-import { useSettings } from "@/hooks/useAllergies";
+import { useAllergies } from "@/hooks/useAllergies";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function AllergensScreen() {
   const router = useRouter();
-  const { updateAllergies, clearError, allergies, getAllergies, error } = useSettings();
+  const { updateAllergies, clearError, allergies, error } = useAllergies();
   const [selectedAllergies, setSelectedAllergies] = useState([]);
   const [customAllergy, setCustomAllergy] = useState("");
   const [customAllergiesList, setCustomAllergiesList] = useState([]);
@@ -47,12 +47,14 @@ export default function AllergensScreen() {
       const existingCommon = [];
       const existingCustom = [];
 
-      allergies.forEach((allergy) => {
-        if (commonAllergyIds.includes(allergy)) {
-          existingCommon.push(allergy);
+      allergies.forEach((allergyName) => {
+        if (commonAllergyIds.includes(allergyName)) {
+          existingCommon.push(allergyName);
         } else {
-          existingCustom.push(allergy);
-          existingCommon.push(`custom_${allergy}`);
+          existingCustom.push(allergyName);
+          // Add a custom prefix to differentiate custom allergies in selectedAllergies
+          // to prevent clashes with common allergy IDs.
+          existingCommon.push(`custom_${allergyName}`);
         }
       });
 
@@ -64,7 +66,6 @@ export default function AllergensScreen() {
       setCustomAllergiesList([]);
     }
   }, [allergies]);
-
   function toggleAllergy(allergyId) {
     setSelectedAllergies((prev) =>
       prev.includes(allergyId) ? prev.filter((id) => id !== allergyId) : [...prev, allergyId]
@@ -169,16 +170,21 @@ export default function AllergensScreen() {
     );
   }
 
-  function renderCurrentAllergyItem(allergy, index) {
-    const isCommon = commonAllergies.some((common) => common.id === allergy);
-    const commonAllergy = commonAllergies.find((common) => common.id === allergy);
+  function renderCurrentAllergyItem(allergyName, index) {
+    // Now, allergyName is a string directly
+    if (!allergyName) {
+      return null;
+    }
+
+    const isCommon = commonAllergies.some((common) => common.id === allergyName);
+    const commonAllergy = commonAllergies.find((common) => common.id === allergyName);
 
     return (
       <View key={index} style={styles.currentAllergyItem}>
         <View style={styles.currentAllergyIcon}>
           <Ionicons name={isCommon ? commonAllergy.icon : "medical"} size={20} color="#8a42ffff" />
         </View>
-        <ThemedText style={styles.currentAllergyText}>{isCommon ? commonAllergy.name : allergy}</ThemedText>
+        <ThemedText style={styles.currentAllergyText}>{isCommon ? commonAllergy.name : allergyName}</ThemedText>
         {!isCommon && (
           <View style={styles.customBadge}>
             <ThemedText style={styles.customBadgeText}>Custom</ThemedText>

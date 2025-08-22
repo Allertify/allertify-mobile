@@ -1,15 +1,16 @@
 import { useState } from "react";
 import * as SecureStore from "expo-secure-store";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAllergiesAPI } from "./useAllergiesAPI";
+import { resetEmergencyContactGlobalState } from "./useEmergencyContact";
+import { resetAllergiesGlobalState } from "./useAllergies";
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
-/**
- * Low-level authentication hook that handles API calls and token management
- * This hook focuses purely on authentication operations without state management
- */
 export const useAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { fetchAllergies } = useAllergiesAPI();
 
   const register = async (userData) => {
     setIsLoading(true);
@@ -61,10 +62,11 @@ export const useAuth = () => {
         throw new Error(data.message || "Login failed");
       }
 
-      // console.log("Login response:", data);
+      console.log("login data,", result);
 
       if (data.accessToken) {
         await SecureStore.setItemAsync("userToken", data.accessToken);
+        await fetchAllergies(data.accessToken);
       }
       if (data.user) {
         await SecureStore.setItemAsync("userData", JSON.stringify(data.user));
@@ -87,6 +89,12 @@ export const useAuth = () => {
     try {
       await SecureStore.deleteItemAsync("userToken");
       await SecureStore.deleteItemAsync("userData");
+
+      await AsyncStorage.removeItem("userEmergencyContact");
+      await AsyncStorage.removeItem("userAllergies");
+
+      resetEmergencyContactGlobalState();
+      resetAllergiesGlobalState();
       return { success: true };
     } catch (error) {
       console.error("Error while logging out", error);
@@ -130,8 +138,6 @@ export const useAuth = () => {
 
       const result = await response.json();
       const data = result.data;
-
-      // console.log("OTP verification response:", data);
 
       if (!response.ok) {
         throw new Error(result.message || "OTP verification failed");

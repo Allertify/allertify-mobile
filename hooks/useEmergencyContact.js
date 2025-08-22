@@ -32,6 +32,13 @@ const notifyListeners = (newContact) => {
   globalListeners.forEach((listener) => listener(newContact));
 };
 
+export const resetEmergencyContactGlobalState = () => {
+  globalEmergencyContact = null;
+  globalListeners = [];
+  hasFetchedFromAPI = false;
+  isInitializing = false;
+};
+
 export const useEmergencyContact = () => {
   const { token, isLoading: tokenLoading } = useToken();
   const {

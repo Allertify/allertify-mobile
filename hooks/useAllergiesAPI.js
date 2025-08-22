@@ -7,7 +7,7 @@ const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
  * Low-level settings hook that handles API calls and storage management
  * This hook focuses purely on settings operations without state management
  */
-export const useSettingsAPI = () => {
+export const useAllergiesAPI = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -33,11 +33,14 @@ export const useSettingsAPI = () => {
       }
 
       const data = await response.json();
-      const allergiesData = data?.allergies || [];
+      const allergiesData = data?.data || [];
+      const allergenObjects = allergiesData.map((item) => item.allergen);
+      const allergenNames = allergenObjects.map((allergyObj) => allergyObj.name);
 
-      // Store in AsyncStorage for caching
-      await AsyncStorage.setItem("userAllergies", JSON.stringify(allergiesData));
-      // console.log("from fetchAllergies API call:", allergiesData);
+      // This is the correct line to change
+      await AsyncStorage.setItem("userAllergies", JSON.stringify(allergenNames));
+
+      console.log(allergenObjects);
 
       return { success: true, data: allergiesData };
     } catch (error) {

@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useToken } from "./useToken";
-import { useSettingsAPI } from "./useAllergiesAPI";
+import { useAllergiesAPI } from "./useAllergiesAPI";
 
 // Global state to keep allergies synchronized across all instances
 let globalAllergies = [];
@@ -11,7 +11,12 @@ const notifyListeners = (newAllergies) => {
   globalListeners.forEach((listener) => listener(newAllergies));
 };
 
-export const useSettings = () => {
+export const resetAllergiesGlobalState = () => {
+  globalAllergies = [];
+  globalListeners = [];
+};
+
+export const useAllergies = () => {
   const { token, isLoading: tokenLoading } = useToken();
   const {
     fetchAllergies,
@@ -20,7 +25,7 @@ export const useSettings = () => {
     isLoading: apiLoading,
     error,
     clearError
-  } = useSettingsAPI();
+  } = useAllergiesAPI();
 
   const [allergies, setAllergies] = useState(globalAllergies);
   const [isLoading, setIsLoading] = useState(false);

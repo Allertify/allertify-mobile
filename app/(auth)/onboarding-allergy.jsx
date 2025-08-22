@@ -12,13 +12,13 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { LinearGradient } from "expo-linear-gradient";
-import { useSettings } from "@/hooks/useAllergies";
+import { useAllergies } from "@/hooks/useAllergies";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function onboardingAllergyScreen() {
   const router = useRouter();
 
-  const { updateAllergies, clearError, error } = useSettings();
+  const { updateAllergies, clearError, error } = useAllergies();
   const [selectedAllergies, setSelectedAllergies] = useState([]);
   const [customAllergy, setCustomAllergy] = useState("");
   const [customAllergiesList, setCustomAllergiesList] = useState([]);
