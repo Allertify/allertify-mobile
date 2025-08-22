@@ -133,6 +133,9 @@ export default function HomeScreen() {
   const redFoodList = savedScansData?.scans?.filter((scan) => scan.listType === "RED") || [];
   const greenFoodList = savedScansData?.scans?.filter((scan) => scan.listType === "GREEN") || [];
 
+  console.log(redFoodList);
+  console.log(greenFoodList);
+
   const allergiesDisplay =
     allergies && allergies.length > 0 ? `${allergies.filter(Boolean).join(", ")}` : "No allergies recorded";
 

@@ -21,11 +21,11 @@ export function HorizontalList({ itemCount = 5, type = "placeholder", listType =
             }
           }}
         >
-          <Image
-            source={{ uri: scan.product.imageUrl }}
-            style={styles.historyImage}
-            defaultSource={require("@/assets/ramen_default.png")}
-          />
+          {scan.product.imageUrl ? (
+            <Image source={{ uri: scan.product.imageUrl }} style={styles.historyImage} />
+          ) : (
+            <Image source={require("@/assets/ramen_default.png")} style={styles.historyImage} />
+          )}
         </TouchableOpacity>
       );
     }
