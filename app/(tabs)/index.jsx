@@ -6,7 +6,7 @@ import { Colors } from "@/constants/Colors";
 import { useHistory } from "@/hooks/useHistory";
 import { useToken } from "@/hooks/useToken";
 import { useUser } from "@/hooks/useUser";
-import { useSettings } from "@/hooks/useSettings"; // This now uses the refactored version
+import { useSettings } from "@/hooks/useAllergies"; // This now uses the refactored version
 
 export default function HomeScreen() {
   const { token, isLoading: tokenLoading } = useToken();
@@ -32,7 +32,7 @@ export default function HomeScreen() {
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <ThemedText style={styles.greeting}>👋 Hey, {user?.full_name || "User"}</ThemedText>
+      <ThemedText style={styles.greeting}>👋 Hey, {user?.fullName || "User"}</ThemedText>
       <ThemedText style={styles.allergiesInfo}>{allergiesDisplay}</ThemedText>
 
       <ThemedLink label="Recent Scans" href="/profile/history" />
@@ -43,6 +43,8 @@ export default function HomeScreen() {
 
       <ThemedLink label="Green Food List" href="/profile/products" />
       <HorizontalList itemCount={greenFoodList.length} type="history" scans={greenFoodList} />
+
+      <ThemedLink label="Test" href="/onboarding-emergency" />
 
       <View style={styles.bottomSpacing} />
     </ScrollView>

@@ -24,8 +24,8 @@ export const useAuth = () => {
         body: JSON.stringify(userData)
       });
 
-      const data = await response.json();
-      // console.log("Registration response:", data);
+      const result = await response.json();
+      const data = result.data;
 
       if (!response.ok) {
         throw new Error(data.message || "Registration failed");
@@ -54,7 +54,8 @@ export const useAuth = () => {
         body: JSON.stringify(credentials)
       });
 
-      const data = await response.json();
+      const result = await response.json();
+      const data = result.data;
 
       if (!response.ok) {
         throw new Error(data.message || "Login failed");
@@ -127,17 +128,19 @@ export const useAuth = () => {
         body: JSON.stringify(otpData)
       });
 
-      const data = await response.json();
+      const result = await response.json();
+      const data = result.data;
+
       // console.log("OTP verification response:", data);
 
       if (!response.ok) {
-        throw new Error(data.message || "OTP verification failed");
+        throw new Error(result.message || "OTP verification failed");
       }
 
-      if (data.token) {
-        await SecureStore.setItemAsync("userToken", data.token);
+      if (result.data.token) {
+        await SecureStore.setItemAsync("userToken", data.accessToken);
       }
-      if (data.user) {
+      if (result.data.user) {
         await SecureStore.setItemAsync("userData", JSON.stringify(data.user));
       }
 

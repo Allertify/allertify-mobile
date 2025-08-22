@@ -144,7 +144,7 @@ export default function ProfileScreen() {
                 </LinearGradient>
               </View>
               <View style={styles.userInfo}>
-                <ThemedText style={styles.userName}>{user.full_name || user.name}</ThemedText>
+                <ThemedText style={styles.userName}>{user.fullName}</ThemedText>
                 <ThemedText style={styles.userEmail}>{user.email}</ThemedText>
                 {subscriptionLoading ? (
                   <View style={styles.subscriptionInfo}>
