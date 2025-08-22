@@ -4,7 +4,7 @@ import { useSaveProduct } from "@/hooks/useSaveProduct";
 import { useSaveScan } from "@/hooks/useSaveScan";
 import { router } from "expo-router";
 
-export function ProductActions({ style, productId, scanId, token, showDelete = false }) {
+export function ProductActions({ style, productId, scanId, token, showDelete = false, currentListType = null }) {
   const { mutate: saveToRed, isPending: isSavingRed } = useSaveProduct(productId, "RED", token);
   const { mutate: saveToGreen, isPending: isSavingGreen } = useSaveProduct(productId, "GREEN", token);
   const { mutate: removeFromList, isPending: isRemoving } = useSaveProduct(productId, null, token);
@@ -83,15 +83,21 @@ export function ProductActions({ style, productId, scanId, token, showDelete = f
           <ThemedButton
             style={styles.actionButton}
             variant="destructive"
-            label={isSavingRed || isSavingScan ? "ADDING..." : "+ RED LIST"}
+            label={isSavingRed || isSavingScan ? "ADDING..." : currentListType === "RED" ? "IN RED LIST" : "+ RED LIST"}
             onPress={onAddRed}
-            disabled={isSavingRed || isSavingGreen || isSavingScan || isRemoving}
+            disabled={isSavingRed || isSavingGreen || isSavingScan || isRemoving || currentListType === "RED"}
           />
           <ThemedButton
             style={[styles.actionButton, styles.greenButton]}
-            label={isSavingGreen || isSavingScan ? "ADDING..." : "+ GREEN LIST"}
+            label={
+              isSavingGreen || isSavingScan
+                ? "ADDING..."
+                : currentListType === "GREEN"
+                ? "IN GREEN LIST"
+                : "+ GREEN LIST"
+            }
             onPress={onAddGreen}
-            disabled={isSavingRed || isSavingGreen || isSavingScan || isRemoving}
+            disabled={isSavingRed || isSavingGreen || isSavingScan || isRemoving || currentListType === "GREEN"}
           />
         </>
       ) : (

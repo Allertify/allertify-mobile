@@ -17,10 +17,10 @@ async function scanProduct(barcode, token) {
   return json.data;
 }
 
-export function useProduct(barcode, token) {
+export function useProduct(barcode, token, canScan = true) {
   return useQuery({
     queryKey: ["product", barcode],
     queryFn: () => scanProduct(barcode, token),
-    enabled: !!barcode && !!token
+    enabled: !!barcode && !!token && canScan
   });
 }

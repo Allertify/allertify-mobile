@@ -9,21 +9,16 @@ import { ProductBasicInfo } from "@/components/product/ProductBasicInfo";
 import { ProductImage } from "@/components/product/ProductImage";
 import { RiskAssessment } from "@/components/product/RiskAssessment";
 import { Colors } from "@/constants/Colors";
-import { useProduct } from "@/hooks/useProduct";
-import { useSavedScans } from "@/hooks/useSavedScans";
-import { useScanLimit } from "@/hooks/useScanLimit";
+import { useHistory } from "@/hooks/useHistory";
 import { useToken } from "@/hooks/useToken";
+import { ThemedText } from "@/components/ui/ThemedText";
 
-export default function ProductDetailsScreen() {
-  const { productId: barcode } = useLocalSearchParams();
+export default function HistoryDetailsScreen() {
+  const { scanId } = useLocalSearchParams();
   const { token, isLoading: tokenLoading } = useToken();
-  const { data: scanLimit, isLoading: scanLimitLoading } = useScanLimit(token);
-  const { data, isLoading, error, isError } = useProduct(barcode, token, scanLimit?.canScan);
-  const { data: savedScansData, isLoading: savedScansLoading } = useSavedScans(token);
+  const { data, isLoading, error, isError } = useHistory(token);
 
-  const currentListType = savedScansData?.scans?.find((scan) => scan.productId === data?.product?.id)?.listType || null;
-
-  if (tokenLoading || scanLimitLoading || isLoading || savedScansLoading) {
+  if (tokenLoading || isLoading) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={Colors.blue} />
@@ -42,60 +37,65 @@ export default function ProductDetailsScreen() {
   if (!isLoading && !data) {
     return (
       <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>Product not found</Text>
+        <Text style={styles.errorText}>History not found</Text>
       </View>
     );
   }
 
-  // Check if scan limit is exceeded
-  if (scanLimit && !scanLimit.canScan) {
+  const scan = data.scans.find((scan) => String(scan.id) === String(scanId));
+
+  if (!scan) {
     return (
       <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>Daily scan limit exceeded</Text>
-        <Text style={styles.errorSubtext}>
-          You've used {scanLimit.currentUsage} of {scanLimit.dailyLimit} daily scans.
-        </Text>
-        <Text style={styles.errorSubtext}>Please upgrade your subscription or try again tomorrow.</Text>
+        <Text style={styles.errorText}>Scan not found in history</Text>
       </View>
     );
   }
+
+  const savedStatus = (() => {
+    if (scan?.listType === "RED") {
+      return { label: "Saved in RED list", bgColor: Colors.red, textColor: "#fff" };
+    }
+    if (scan?.listType === "GREEN") {
+      return { label: "Saved in GREEN list", bgColor: Colors.green, textColor: "#fff" };
+    }
+    return { label: "Not saved", bgColor: "#dddddd", textColor: "#333333" };
+  })();
 
   return (
     <View style={styles.screen}>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <View style={styles.imageContainer}>
-          <ProductImage imageUrl={data.product?.imageUrl} />
+          <ProductImage imageUrl={scan.product.imageUrl} />
         </View>
 
         <ProductBasicInfo
           product={{
-            name: data.product?.name,
-            barcode: data.product?.barcode
+            name: scan.product.name,
+            barcode: scan.product.barcode
           }}
         />
 
-        {scanLimit && (
-          <View style={styles.scanLimitInfo}>
-            <Text style={styles.scanLimitText}>{scanLimit.remainingScans} scans remaining today</Text>
-          </View>
-        )}
+        <View style={[styles.statusBadge, { backgroundColor: savedStatus.bgColor }]}>
+          <ThemedText style={[styles.statusText, { color: savedStatus.textColor }]}>{savedStatus.label}</ThemedText>
+        </View>
 
-        <RiskAssessment riskLevel={data.riskLevel} />
-        {Array.isArray(data.matchedAllergens) && data.matchedAllergens.length > 0 && (
-          <AllergensList allergens={data.matchedAllergens} />
+        <RiskAssessment riskLevel={scan.riskLevel} />
+        {Array.isArray(scan.matchedAllergens) && scan.matchedAllergens.length > 0 && (
+          <AllergensList allergens={scan.matchedAllergens} />
         )}
-        {!!data.riskExplanation && <Analysis analysis={data.riskExplanation} />}
-        {!!data.product?.ingredients && <Ingredients ingredients={data.product.ingredients} />}
+        {!!scan.riskExplanation && <Analysis analysis={scan.riskExplanation} />}
+        {!!scan.product.ingredients && <Ingredients ingredients={scan.product.ingredients} />}
 
         <View style={styles.bottomSpacing} />
       </ScrollView>
 
       <ProductActions
-        productId={data.product.id}
-        scanId={data.id}
+        productId={scan.product.id}
+        scanId={scan.id}
         token={token}
         showDelete={false}
-        currentListType={currentListType}
+        currentListType={scan.listType}
       />
     </View>
   );
@@ -135,23 +135,14 @@ const styles = StyleSheet.create({
     color: Colors.red,
     textAlign: "center"
   },
-  errorSubtext: {
-    fontSize: 14,
-    color: "#666",
-    textAlign: "center",
-    marginTop: 8,
-    lineHeight: 20
+  statusBadge: {
+    alignSelf: "flex-start",
+    borderRadius: 12,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    marginBottom: 16
   },
-  scanLimitInfo: {
-    backgroundColor: "#f0f8ff",
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 16,
-    alignItems: "center"
-  },
-  scanLimitText: {
-    fontSize: 14,
-    color: "#0066cc",
-    fontWeight: "500"
+  statusText: {
+    fontSize: 12
   }
 });

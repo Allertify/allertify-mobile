@@ -16,7 +16,10 @@ import { ThemedText } from "@/components/ui/ThemedText";
 export default function ProductDetailsScreen() {
   const { scanId } = useLocalSearchParams();
   const { token, isLoading: tokenLoading } = useToken();
-  const { data, isLoading, error, isError } = useSavedScans(token);
+  const { data: savedScansData, isLoading, error, isError } = useSavedScans(token);
+
+  // Find the specific scan from saved scans
+  const scan = savedScansData?.scans?.find((scan) => String(scan.id) === String(scanId));
 
   if (tokenLoading || isLoading) {
     return (
@@ -34,15 +37,13 @@ export default function ProductDetailsScreen() {
     );
   }
 
-  if (!isLoading && !data) {
+  if (!isLoading && !scan) {
     return (
       <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>Product not found</Text>
+        <Text style={styles.errorText}>Scan not found in saved scans</Text>
       </View>
     );
   }
-
-  const scan = data.scans.find((scan) => String(scan.id) === String(scanId));
 
   const savedStatus = (() => {
     if (scan?.listType === "RED") {
@@ -82,7 +83,13 @@ export default function ProductDetailsScreen() {
         <View style={styles.bottomSpacing} />
       </ScrollView>
 
-      <ProductActions productId={scan.product.id} scanId={scan.id} token={token} showDelete={true} />
+      <ProductActions
+        productId={scan.product.id}
+        scanId={scan.id}
+        token={token}
+        showDelete={true}
+        currentListType={scan.listType}
+      />
     </View>
   );
 }

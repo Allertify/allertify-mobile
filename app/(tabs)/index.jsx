@@ -4,6 +4,7 @@ import { ThemedLink } from "@/components/ui/ThemedLink";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { useHistory } from "@/hooks/useHistory";
+import { useSavedScans } from "@/hooks/useSavedScans";
 import { useToken } from "@/hooks/useToken";
 import { useUser } from "@/hooks/useUser";
 import { useAllergies } from "@/hooks/useAllergies";
@@ -78,6 +79,7 @@ export default function HomeScreen() {
   const { user } = useUser();
   const { allergies, isLoading: allergiesLoading } = useAllergies();
   const { data: historyData, isLoading: historyLoading } = useHistory(token);
+  const { data: savedScansData, isLoading: savedScansLoading } = useSavedScans(token);
   const { emergencyContact, hasEmergencyContact } = useEmergencyContact();
 
   const handleEmergencyCall = async () => {
@@ -119,7 +121,7 @@ export default function HomeScreen() {
     ]);
   };
 
-  if (tokenLoading || historyLoading || allergiesLoading) {
+  if (tokenLoading || historyLoading || savedScansLoading || allergiesLoading) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={Colors.blue} />
@@ -128,8 +130,8 @@ export default function HomeScreen() {
   }
 
   const recentScans = historyData?.scans?.slice(0, 9) || [];
-  const redFoodList = historyData?.scans?.filter((scan) => scan.listType === "RED") || [];
-  const greenFoodList = historyData?.scans?.filter((scan) => scan.listType === "GREEN") || [];
+  const redFoodList = savedScansData?.scans?.filter((scan) => scan.listType === "RED") || [];
+  const greenFoodList = savedScansData?.scans?.filter((scan) => scan.listType === "GREEN") || [];
 
   const allergiesDisplay =
     allergies && allergies.length > 0 ? `${allergies.filter(Boolean).join(", ")}` : "No allergies recorded";
@@ -221,7 +223,7 @@ export default function HomeScreen() {
               </View>
               <View style={styles.listContainer}>
                 {redFoodList.length > 0 ? (
-                  <HorizontalList itemCount={redFoodList.length} type="history" scans={redFoodList} />
+                  <HorizontalList itemCount={redFoodList.length} type="saved" scans={redFoodList} />
                 ) : (
                   <View style={styles.emptyState}>
                     <Ionicons name="warning-outline" size={48} color="#FFB3B3" />
@@ -245,7 +247,7 @@ export default function HomeScreen() {
               </View>
               <View style={styles.listContainer}>
                 {greenFoodList.length > 0 ? (
-                  <HorizontalList itemCount={greenFoodList.length} type="history" scans={greenFoodList} />
+                  <HorizontalList itemCount={greenFoodList.length} type="saved" scans={greenFoodList} />
                 ) : (
                   <View style={styles.emptyState}>
                     <Ionicons name="checkmark-circle-outline" size={48} color="#B3E6C7" />

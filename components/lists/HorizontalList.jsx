@@ -7,14 +7,18 @@ export function HorizontalList({ itemCount = 5, type = "placeholder", listType =
   const router = useRouter();
 
   const renderItem = (index) => {
-    if (type === "history" && scans[index]) {
+    if ((type === "history" || type === "saved") && scans[index]) {
       const scan = scans[index];
       return (
         <TouchableOpacity
           key={scan.id}
           style={styles.historyItem}
           onPress={() => {
-            router.push(`/scan/${scan.id}`);
+            if (type === "saved") {
+              router.push(`/scan/${scan.id}`);
+            } else {
+              router.push(`/history/${scan.id}`);
+            }
           }}
         >
           <Image
