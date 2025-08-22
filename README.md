@@ -109,6 +109,7 @@ Using **barcode scanning, AI-powered allergy reasoning, and personalized profile
 git clone https://github.com/Allertify/allertify-mobile.git
 
 # Add api url to .env.local
+EXPO_PUBLIC_API_BASE_URL= <insert API URL here>
 
 # Install dependencies
 cd allertify
