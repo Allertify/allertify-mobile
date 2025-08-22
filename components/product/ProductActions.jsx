@@ -2,10 +2,12 @@ import { Alert, StyleSheet, View } from "react-native";
 import { ThemedButton } from "@/components/ui/ThemedButton";
 import { useSaveProduct } from "@/hooks/useSaveProduct";
 import { useSaveScan } from "@/hooks/useSaveScan";
+import { router } from "expo-router";
 
-export function ProductActions({ style, productId, scanId, token }) {
+export function ProductActions({ style, productId, scanId, token, showDelete = false }) {
   const { mutate: saveToRed, isPending: isSavingRed } = useSaveProduct(productId, "RED", token);
   const { mutate: saveToGreen, isPending: isSavingGreen } = useSaveProduct(productId, "GREEN", token);
+  const { mutate: removeFromList, isPending: isRemoving } = useSaveProduct(productId, null, token);
   const { mutate: saveScan, isPending: isSavingScan } = useSaveScan(scanId, token);
 
   const onAddRed = () => {
@@ -62,21 +64,45 @@ export function ProductActions({ style, productId, scanId, token }) {
     });
   };
 
+  const onRemoveFromList = () => {
+    removeFromList(undefined, {
+      onSuccess: (message) => {
+        Alert.alert("Success", "Product removed from all lists");
+        router.back();
+      },
+      onError: (err) => {
+        Alert.alert("Failed to remove from list", err?.message || "Unknown error");
+      }
+    });
+  };
+
   return (
     <View style={[styles.floatingActions, style]}>
-      <ThemedButton
-        style={styles.actionButton}
-        variant="destructive"
-        label={isSavingRed || isSavingScan ? "ADDING..." : "+ RED LIST"}
-        onPress={onAddRed}
-        disabled={isSavingRed || isSavingGreen || isSavingScan}
-      />
-      <ThemedButton
-        style={[styles.actionButton, styles.greenButton]}
-        label={isSavingGreen || isSavingScan ? "ADDING..." : "+ GREEN LIST"}
-        onPress={onAddGreen}
-        disabled={isSavingRed || isSavingGreen || isSavingScan}
-      />
+      {!showDelete ? (
+        <>
+          <ThemedButton
+            style={styles.actionButton}
+            variant="destructive"
+            label={isSavingRed || isSavingScan ? "ADDING..." : "+ RED LIST"}
+            onPress={onAddRed}
+            disabled={isSavingRed || isSavingGreen || isSavingScan || isRemoving}
+          />
+          <ThemedButton
+            style={[styles.actionButton, styles.greenButton]}
+            label={isSavingGreen || isSavingScan ? "ADDING..." : "+ GREEN LIST"}
+            onPress={onAddGreen}
+            disabled={isSavingRed || isSavingGreen || isSavingScan || isRemoving}
+          />
+        </>
+      ) : (
+        <ThemedButton
+          style={[styles.actionButton, styles.deleteButton]}
+          variant="outline"
+          label={isRemoving ? "REMOVING..." : "REMOVE FROM LISTS"}
+          onPress={onRemoveFromList}
+          disabled={isSavingRed || isSavingGreen || isSavingScan || isRemoving}
+        />
+      )}
     </View>
   );
 }
@@ -98,5 +124,9 @@ const styles = StyleSheet.create({
   },
   greenButton: {
     backgroundColor: "#a6d17d"
+  },
+  deleteButton: {
+    backgroundColor: "#dc3545",
+    borderWidth: 1
   }
 });

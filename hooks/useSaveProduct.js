@@ -10,7 +10,7 @@ async function saveProduct(productId, listType, token) {
     body: JSON.stringify({
       productId: Number(productId),
       listType,
-      action: "ADD"
+      action: listType === null ? "REMOVE" : "ADD"
     })
   });
 

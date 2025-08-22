@@ -4,6 +4,7 @@ import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-nat
 import { AllergensList } from "@/components/product/AllergensList";
 import { Analysis } from "@/components/product/Analysis";
 import { Ingredients } from "@/components/product/Ingredients";
+import { ProductActions } from "@/components/product/ProductActions";
 import { ProductBasicInfo } from "@/components/product/ProductBasicInfo";
 import { ProductImage } from "@/components/product/ProductImage";
 import { RiskAssessment } from "@/components/product/RiskAssessment";
@@ -80,6 +81,8 @@ export default function ProductDetailsScreen() {
 
         <View style={styles.bottomSpacing} />
       </ScrollView>
+
+      <ProductActions productId={scan.product.id} scanId={scan.id} token={token} showDelete={true} />
     </View>
   );
 }
@@ -98,7 +101,7 @@ const styles = StyleSheet.create({
     marginBottom: 24
   },
   bottomSpacing: {
-    height: 120
+    height: 140
   },
   loadingContainer: {
     flex: 1,
