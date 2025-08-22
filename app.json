@@ -21,7 +21,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.ausath.allertifymobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -29,7 +30,14 @@
     "plugins": [
       "expo-router",
       "expo-font",
-      "expo-barcode-scanner"
-    ]
+      "expo-secure-store"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "8981e6c0-345a-43cc-b240-f22b1d2ede8a"
+      }
+    },
+    "owner": "ausath"
   }
 }
