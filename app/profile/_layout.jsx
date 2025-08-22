@@ -37,9 +37,15 @@ export default function ProfileLayout() {
         }}
       />
       <Stack.Screen
-        name="password"
+        name="emergency-contact"
         options={{
-          headerTitle: "Change Password"
+          headerTitle: "Change Emergency Contact"
+        }}
+      />
+      <Stack.Screen
+        name="allergens"
+        options={{
+          headerTitle: "Change Allergens"
         }}
       />
     </Stack>

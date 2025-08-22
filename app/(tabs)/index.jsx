@@ -44,8 +44,6 @@ export default function HomeScreen() {
       <ThemedLink label="Green Food List" href="/profile/products" />
       <HorizontalList itemCount={greenFoodList.length} type="history" scans={greenFoodList} />
 
-      <ThemedLink label="Test" href="/onboarding-emergency" />
-
       <View style={styles.bottomSpacing} />
     </ScrollView>
   );
