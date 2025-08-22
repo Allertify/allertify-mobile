@@ -550,7 +550,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 14,
     fontWeight: "600",
-    marginTop: 10,
+    marginBottom: 10,
     paddingHorizontal: 10
   },
 
@@ -559,7 +559,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 14,
     fontWeight: "600",
-    marginTop: 10,
+    marginBottom: 10,
     paddingHorizontal: 10
   }
 });

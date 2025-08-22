@@ -137,7 +137,7 @@ export const useAuth = () => {
         throw new Error(result.message || "OTP verification failed");
       }
 
-      if (result.data.token) {
+      if (result.data.accessToken) {
         await SecureStore.setItemAsync("userToken", data.accessToken);
       }
       if (result.data.user) {
