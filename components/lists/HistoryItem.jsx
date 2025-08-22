@@ -29,11 +29,11 @@ export function HistoryItem({ scan }) {
 
   return (
     <View style={styles.itemContainer}>
-      <Image
-        source={{ uri: scan.product.imageUrl }}
-        style={styles.productImage}
-        defaultSource={require("@/assets/ramen_default.png")}
-      />
+      {scan.product.imageUrl ? (
+        <Image source={{ uri: scan.product.imageUrl }} style={styles.productImage} />
+      ) : (
+        <Image source={require("@/assets/ramen_default.png")} style={styles.productImage} />
+      )}
       <View style={styles.itemContent}>
         <ThemedText style={styles.productName} numberOfLines={2}>
           {scan.product.name}

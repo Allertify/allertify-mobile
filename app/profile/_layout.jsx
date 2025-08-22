@@ -5,6 +5,7 @@ export default function ProfileLayout() {
     <Stack
       screenOptions={{
         headerTitleAlign: "center",
+        headerShown: false,
         headerTitleStyle: { fontFamily: "Satoshi-Bold" }
       }}
     >
@@ -14,43 +15,12 @@ export default function ProfileLayout() {
           headerTitle: "Subscription Plans"
         }}
       />
-      <Stack.Screen
-        name="allergens"
-        options={{
-          headerShown: false
-        }}
-      />
-      <Stack.Screen
-        name="history"
-        options={{
-          headerTitle: "Scan History"
-        }}
-      />
-      <Stack.Screen
-        name="products"
-        options={{
-          headerTitle: "My Products"
-        }}
-      />
-      <Stack.Screen
-        name="full-name"
-        options={{
-          headerTitle: "Change Full Name"
-        }}
-      />
-      <Stack.Screen
-        name="email"
-        options={{
-          headerTitle: "Change Email"
-        }}
-      />
-      <Stack.Screen
-        name="emergency-contact"
-        options={{
-          headerTitle: "Change Emergency Contact",
-          headerShown: false
-        }}
-      />
+      <Stack.Screen name="allergens" />
+      <Stack.Screen name="history" />
+      <Stack.Screen name="products" />
+      <Stack.Screen name="full-name" />
+      <Stack.Screen name="email" />
+      <Stack.Screen name="emergency-contact" />
     </Stack>
   );
 }

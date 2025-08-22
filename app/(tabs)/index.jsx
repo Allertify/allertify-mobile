@@ -133,6 +133,9 @@ export default function HomeScreen() {
   const redFoodList = savedScansData?.scans?.filter((scan) => scan.listType === "RED") || [];
   const greenFoodList = savedScansData?.scans?.filter((scan) => scan.listType === "GREEN") || [];
 
+  console.log(redFoodList);
+  console.log(greenFoodList);
+
   const allergiesDisplay =
     allergies && allergies.length > 0 ? `${allergies.filter(Boolean).join(", ")}` : "No allergies recorded";
 
@@ -424,14 +427,14 @@ const styles = StyleSheet.create({
     gap: 12
   },
   quickActionCard: {
-    flex: 1, // Remove this line: minHeight: 200,
+    flex: 1,
     borderRadius: 16,
     overflow: "hidden",
     elevation: 6
   },
   cardGradient: {
     padding: 20,
-    height: 240, // Fixed height - no expansion allowed
+    height: 240,
     justifyConent: "space-between"
   },
   cardHeader: {
