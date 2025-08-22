@@ -23,6 +23,7 @@ export default function TabsLayout() {
           name="index"
           options={{
             headerTitle: "Allertify",
+            headerShown: false,
             title: "Home",
             tabBarIcon: ({ color, focused }) => (
               <Ionicons name={focused ? "home" : "home-outline"} color={color} size={24} />

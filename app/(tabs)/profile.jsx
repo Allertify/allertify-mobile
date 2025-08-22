@@ -13,21 +13,21 @@ const account = [
     label: "Subscriptions",
     description: "Manage your subscriptions",
     icon: "heart",
-    colors: ["#ff6b6bff", "#ffa500ff", "#ff1744ff"]
+    colors: ["#E8A0E4", "#A2C3E0", "#9A9AE3"]
   },
   {
     href: "/profile/history",
     label: "History",
     description: "View your scan history",
     icon: "time",
-    colors: ["#fff5aaff", "#5af9a9ff", "#4284ffff"]
+    colors: ["#F4D03F", "#F7DC6F", "#F5B041"]
   },
   {
     href: "/profile/products",
     label: "My Products",
     description: "View your Red and Green Lists",
     icon: "list",
-    colors: ["#ffc30fff", "#ff8e1eff", "#8a42ffff"]
+    colors: ["#A7E9AF", "#4ED8C2", "#1FBFB8"]
   }
 ];
 
@@ -37,28 +37,28 @@ const settings = [
     label: "Allergens",
     description: "Manage your allergens",
     icon: "medical",
-    colors: ["#ff6b6bff", "#ffa500ff", "#ff1744ff"]
+    colors: ["#F4B393", "#E38A73", "#D25F4C"]
   },
   {
     href: "/profile/emergency-contact",
     label: "Emergency Contact",
     description: "Manage your Emergency Contact",
     icon: "call",
-    colors: ["#e74c3cff", "#f39c12ff", "#e67e22ff"]
+    colors: ["#56C4FF", "#3498DB", "#2E86C1"]
   },
   {
     href: "/profile/full-name",
     label: "Full Name",
     description: "Change your full name",
     icon: "person",
-    colors: ["#3498dbff", "#9b59b6ff", "#2980b9ff"]
+    colors: ["#B08CD5", "#9B59B6", "#8E44AD"]
   },
   {
     href: "/profile/email",
     label: "Email",
     description: "Change your email",
     icon: "mail",
-    colors: ["#1abc9cff", "#16a085ff", "#27ae60ff"]
+    colors: ["#5DCE8F", "#27AE60", "#1E8449"]
   },
   {
     href: "/profile/password",
