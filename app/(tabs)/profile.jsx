@@ -40,7 +40,7 @@ const settings = [
     colors: ["#ff6b6bff", "#ffa500ff", "#ff1744ff"]
   },
   {
-    href: "/profile/emergency-contacts",
+    href: "/profile/emergency-contact",
     label: "Emergency Contact",
     description: "Manage your Emergency Contact",
     icon: "call",
