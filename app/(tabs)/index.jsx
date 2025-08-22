@@ -424,14 +424,14 @@ const styles = StyleSheet.create({
     gap: 12
   },
   quickActionCard: {
-    flex: 1, // Remove this line: minHeight: 200,
+    flex: 1,
     borderRadius: 16,
     overflow: "hidden",
     elevation: 6
   },
   cardGradient: {
     padding: 20,
-    height: 240, // Fixed height - no expansion allowed
+    height: 240,
     justifyConent: "space-between"
   },
   cardHeader: {
